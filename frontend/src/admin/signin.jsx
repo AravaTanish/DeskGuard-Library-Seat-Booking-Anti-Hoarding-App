@@ -1,8 +1,28 @@
 import React from "react";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Signin() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const handleSubmit = async () => {
+        try {
+            const response = await api.post("/admin/auth/sign-in", {
+                email,
+                password,
+            });
+            if (response.status === 200) {
+                navigate("/admin/dashboard");
+            }
+        } catch (error) {
+            console.error("Error occurred while signing in:", error);
+            toast.error(error.response?.data?.message || "signin failed. Please try again.");
+        }
+    };
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
             <Card className="w-full max-w-md rounded-2xl border border-gray-200 shadow-xl p-4">
@@ -23,6 +43,8 @@ function Signin() {
                         <TextInput
                             id="email1"
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
                             sizing="lg"
                             required
@@ -38,6 +60,8 @@ function Signin() {
 
                         <TextInput
                             id="password1"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             type="password"
                             placeholder="Enter your password"
                             sizing="lg"
@@ -57,6 +81,7 @@ function Signin() {
                     <Button
                         type="submit"
                         size="lg"
+                        onClick={handleSubmit()}
                         className="mt-2 rounded-lg bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-white text-center width-full h-10"
                     >
                         Sign In
