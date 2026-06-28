@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import validator from "validator";
 import Admin from "../../models/Admin.model.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import AppError from "../utils/appError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import AppError from "../../utils/appError.js";
 import { hashPassword, verifyPassword } from "../../utils/password.js";
 import {
   generateAccessToken,
@@ -30,7 +30,6 @@ export const signin = asyncHandler(async (req, res) => {
   const hashedPassword = await hashPassword(password);
 
   const admin = await Admin.create({ email: email, password: hashedPassword });
-
   return res
     .status(200)
     .json({ success: true, message: "Admin created successfully" });
@@ -80,7 +79,6 @@ export const login = asyncHandler(async (req, res) => {
     path: "/",
     maxAge: 15 * 60 * 1000,
   });
-
   return res.status(200).json({
     success: true,
     message: "Admin logged in successfully",
