@@ -1,34 +1,30 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    withCredentials: true,
+  baseURL: `${import.meta.env.VITE_BASE_URL}/api/`,
+  withCredentials: true,
 });
 
 //this is for recieving responce
 api.interceptors.response.use(
-    (response) => response,
+  (response) => response,
 
-    async (error) => {
-        const originalRequest = error.config;
+  async (error) => {
+    const originalRequest = error.config;
 
-        if (
-            error.response?.status === 401 &&
-            !originalRequest._retry
-        ) {
-            originalRequest._retry = true;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-            try {
-                await api.post("/login/refresh");
+      try {
+        await api.put("/login/refresh");
 
-                return api(originalRequest);
-
-            } catch (err) {
-                return Promise.reject(err);
-            }
-        }
-
-        return Promise.reject(error);
+        return api(originalRequest);
+      } catch (err) {
+        return Promise.reject(err);
+      }
     }
+
+    return Promise.reject(error);
+  },
 );
 export default api;

@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../../middlewares/auth.middleware";
+import authMiddleware from "../../middlewares/auth.middleware.js";
 import {
   login,
   refresh,
@@ -8,8 +8,8 @@ import {
 
 const router = express.Router();
 
-router.post("/sign-in", authMiddleware, signin);
-router.put("/login", authMiddleware, login);
+router.post("/sign-in", signin);
+router.put("/login", login);
 router.put("/refresh", refresh);
 
 export default router;
