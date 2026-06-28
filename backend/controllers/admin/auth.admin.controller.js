@@ -10,7 +10,6 @@ import {
 } from "../../utils/generateTokens.js";
 
 export const signin = asyncHandler(async (req, res) => {
-  console.log("1111");
   const { email, password } = req.body;
   if (!email) {
     throw new AppError("Email required", 404);
@@ -31,14 +30,12 @@ export const signin = asyncHandler(async (req, res) => {
   const hashedPassword = await hashPassword(password);
 
   const admin = await Admin.create({ email: email, password: hashedPassword });
-  console.log("Sign in");
   return res
     .status(200)
     .json({ success: true, message: "Admin created successfully" });
 });
 
 export const login = asyncHandler(async (req, res) => {
-  console.log("2222");
   const { email, password } = req.body;
   if (!email) {
     throw new AppError("Email required", 404);
@@ -82,7 +79,6 @@ export const login = asyncHandler(async (req, res) => {
     path: "/",
     maxAge: 15 * 60 * 1000,
   });
-  console.log("log in");
   return res.status(200).json({
     success: true,
     message: "Admin logged in successfully",
