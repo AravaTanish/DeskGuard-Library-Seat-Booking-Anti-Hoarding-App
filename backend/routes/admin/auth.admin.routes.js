@@ -4,6 +4,7 @@ import {
   login,
   refresh,
   signin,
+  me,
 } from "../../controllers/admin/auth.admin.controller.js";
 
 const router = express.Router();
