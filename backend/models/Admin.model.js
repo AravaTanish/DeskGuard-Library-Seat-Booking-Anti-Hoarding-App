@@ -19,13 +19,6 @@ const adminSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
-
-    libraryIds: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Library",
-      },
-    ],
   },
   { timestamps: true },
 );

@@ -7,12 +7,11 @@ const librarySchema = new mongoose.Schema(
       required: true,
     },
 
-    computerIds: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Computer",
-      },
-    ],
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
   },
   { timestamps: true },
 );
