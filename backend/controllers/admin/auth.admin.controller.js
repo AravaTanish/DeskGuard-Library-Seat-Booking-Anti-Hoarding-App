@@ -95,7 +95,7 @@ export const me = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Admin details fetched",
-    email: user.email,
+    email: admin.email,
   });
 });
 
