@@ -86,6 +86,19 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
+export const me = asyncHandler(async (req, res) => {
+  const id = req.user.id;
+  const admin = await Admin.findById(id).lean();
+  if (!admin) {
+    throw new AppError("Admin not found", 404);
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Admin details fetched",
+    email: user.email,
+  });
+});
+
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
