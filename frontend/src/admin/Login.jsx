@@ -16,7 +16,7 @@ function Login() {
                 email,
                 password,
             });
-            
+
             if (response.data.success) {
                 console.log("Login successful:", response.data);
                 toast.success("Login successful!");

@@ -1,24 +1,21 @@
-import React from 'react'
-import api from '../api/axios.js'
+import api from "../api/axios.js";
 
-function LibraryCard({ library, fetchLibraries }) {
-	const handleDelete = async () => {
-		try{
-			const res = await api.delete(`/admin/library/delete/${library._id}`);
-			if(res.status === 200){
-				fetchLibraries();
-			}
-		}
-		catch(err){
-			console.log(err);
-		}
-	}
-  return (
+function LibraryCard({ library, setLibraries }) {
+    const handleDelete = async () => {
+        try {
+            const res = await api.delete(
+                `/admin/library/delete/${library._id}`,
+            );
+            if (res.success) {
+                setLibraries((prevLibraries) => prevLibraries.filter((l) => l._id !== library._id));
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    return (
         <div className="flex items-center justify-between rounded-xl bg-white p-5 shadow">
-
-            <h2 className="text-lg font-semibold">
-                {library.name}
-            </h2>
+            <h2 className="text-lg font-semibold">{library.name}</h2>
 
             <button
                 onClick={handleDelete}
@@ -26,9 +23,8 @@ function LibraryCard({ library, fetchLibraries }) {
             >
                 Remove
             </button>
-
         </div>
     );
 }
 
-export default LibraryCard
+export default LibraryCard;
