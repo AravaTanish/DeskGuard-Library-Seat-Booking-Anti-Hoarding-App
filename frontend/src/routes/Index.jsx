@@ -7,7 +7,6 @@ import {
 import App from "../App.jsx";
 import Login from "../admin/Login.jsx";
 import Signin from "../admin/Signin.jsx";
-import UserLogin from "../Userlogin.jsx";
 import Dashboard from "../admin/Dashboard.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
@@ -38,17 +37,6 @@ const router = createBrowserRouter(
                         <PrivateRoute>
                             <Dashboard />
                         </PrivateRoute>
-                    }
-                />
-            </Route>
-
-            <Route path="user">
-                <Route
-                    path="login"
-                    element={
-                        <PublicRoute>
-                            <UserLogin />
-                        </PublicRoute>
                     }
                 />
             </Route>

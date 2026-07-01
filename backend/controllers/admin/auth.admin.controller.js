@@ -102,7 +102,7 @@ export const me = asyncHandler(async (req, res) => {
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
-    throw new AppError("Refresh token missing", 401);
+    throw new AppError("Refresh token missing", 404);
   }
 
   const decoded = jwt.verify(

@@ -6,7 +6,7 @@ function LibraryCard({ library, setLibraries }) {
             const res = await api.delete(
                 `/admin/library/delete/${library._id}`,
             );
-            if (res.success) {
+            if (res.data.success) {
                 setLibraries((prevLibraries) => prevLibraries.filter((l) => l._id !== library._id));
             }
         } catch (err) {
