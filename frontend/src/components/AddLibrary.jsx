@@ -11,12 +11,12 @@ function AddLibrary({ closeForm, setLibraries }) {
             const res = await api.post("admin/library/create", {
                 name: libraryName,
             });
-            if (res.success) {
+            if (res.data.success) {
                 toast.success("Library created successfully!");
 
                 setLibraries((prevLibraries) => [
                     ...prevLibraries,
-                    res.library,
+                    res.data.library,
                 ]);
                 closeForm();
             }
