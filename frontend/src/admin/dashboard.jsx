@@ -40,7 +40,7 @@ function dashboard() {
 
                 {showForm && (
                     <AddLibrary
-                        fetchLibraries={fetchLibraries}
+                        setLibraries={setLibraries}
                         closeForm={() => setShowForm(false)}
                     />
                 )}
