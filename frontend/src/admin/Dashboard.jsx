@@ -1,34 +1,29 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import api from '../api/axios.js'
-import AddLibrary from '../components/AddLibrary.jsx'
-import LibraryList from '../components/LibraryList.jsx'
+import { useState, useEffect } from "react";
+import api from "../api/axios.js";
+import AddLibrary from "../components/AddLibrary.jsx";
+import LibraryList from "../components/LibraryList.jsx";
 
-function dashboard() {
-  const [libraries, setLibraries] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+function Dashboard() {
+    const [libraries, setLibraries] = useState([]);
+    const [showForm, setShowForm] = useState(false);
 
-  const fetchLibraries = async () => {
-    try{
-      const res = await api.get("/admin/library/fetch");
-      setLibraries(res.data.libraries);
-    }
-    catch(err){
-      console.log(err);
-    }
-  }
-  useEffect(() => {
-    fetchLibraries();
-  }, []);
+    useEffect(() => {
+        const fetchLibraries = async () => {
+            try {
+                const res = await api.get("/admin/library/fetch");
+                setLibraries(res.data.libraries);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchLibraries();
+    }, []);
 
-   return (
+    return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="mx-auto max-w-5xl">
-
                 <div className="mb-8 flex items-center justify-between">
-                    <h1 className="text-3xl font-bold">
-                        Library Dashboard
-                    </h1>
+                    <h1 className="text-3xl font-bold">Library Dashboard</h1>
 
                     <button
                         onClick={() => setShowForm(!showForm)}
@@ -47,12 +42,11 @@ function dashboard() {
 
                 <LibraryList
                     libraries={libraries}
-                    fetchLibraries={fetchLibraries}
+                    setLibraries={setLibraries}
                 />
-
             </div>
         </div>
     );
 }
 
-export default dashboard
+export default Dashboard;
