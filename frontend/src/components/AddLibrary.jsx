@@ -3,16 +3,17 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import api from "../api/axios.js";
 
-function AddLibrary({ closeForm, fetchLibraries }) {
+function AddLibrary({ closeForm, setLibraries }) {
     const [libraryName, setLibraryName] = useState("");
 
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
             const res = await api.post("admin/library/create", { name: libraryName });
-            if (res.status === 201) {
+            if (res.success) {
                 toast.success("Library created successfully!");
-                fetchLibraries(); // Fetch the updated list of libraries
+
+                setLibraries((prevLibraries) => [...prevLibraries, res.library]);
                 closeForm();
             }
             setLibraryName("");

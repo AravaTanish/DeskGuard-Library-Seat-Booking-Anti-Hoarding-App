@@ -1,4 +1,5 @@
 import React from 'react'
+import api from '../api/axios.js'
 
 function LibraryCard({ library, fetchLibraries }) {
 	const handleDelete = async () => {
@@ -16,7 +17,7 @@ function LibraryCard({ library, fetchLibraries }) {
         <div className="flex items-center justify-between rounded-xl bg-white p-5 shadow">
 
             <h2 className="text-lg font-semibold">
-                {library.libraryName}
+                {library.name}
             </h2>
 
             <button
