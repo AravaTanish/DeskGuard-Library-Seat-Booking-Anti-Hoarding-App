@@ -12,6 +12,11 @@ const librarySchema = new mongoose.Schema(
       ref: "Admin",
       required: true,
     },
+
+    no_of_computers: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

@@ -22,7 +22,7 @@ export const signin = asyncHandler(async (req, res) => {
     throw new AppError("Invalid email", 401);
   }
 
-  const existedAdmin = await Admin.findOne({ email });
+  const existedAdmin = await Admin.exists({ email: email });
   if (existedAdmin) {
     throw new AppError("Email already exists, Please login", 409);
   }
@@ -101,7 +101,6 @@ export const me = asyncHandler(async (req, res) => {
 
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-
   if (!refreshToken) {
     throw new AppError("Refresh token missing", 401);
   }
@@ -110,24 +109,23 @@ export const refresh = asyncHandler(async (req, res) => {
     refreshToken,
     process.env.JWT_REFRESH_TOKEN_SECRET,
   );
-  const admin = await Admin.findById(decoded.id);
 
+  const admin = await Admin.findById(decoded.id).select("+refreshToken");
   if (!admin) {
     throw new AppError("Admin not found", 404);
   }
-
   if (admin.refreshToken !== refreshToken) {
-    throw new AppError("Invalid refresh token", 401);
+    throw new AppError("Invalid refresh token", 404);
   }
-  const newAccessToken = generateAccessToken(admin._id);
 
+  const newAccessToken = generateAccessToken(admin._id);
   res.cookie("accessToken", newAccessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     maxAge: 15 * 60 * 1000,
   });
-
+  
   return res.status(200).json({
     success: true,
     message: "New access token generated successfully",

@@ -16,7 +16,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.put("/login/refresh");
+        await api.put("/admin/auth/refresh");
 
         return api(originalRequest);
       } catch (err) {
