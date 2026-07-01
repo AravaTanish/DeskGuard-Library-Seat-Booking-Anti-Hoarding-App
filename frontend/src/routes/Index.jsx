@@ -4,11 +4,10 @@ import {
     Route,
 } from "react-router-dom";
 
-import App from "../App";
-import Login from "../admin/Login";
-import Signin from "../admin/Signin";
-import UserLogin from "../userlogin";
-import Dashboard from "../admin/dashboard";
+import App from "../App.jsx";
+import Login from "../admin/Login.jsx";
+import Signin from "../admin/Signin.jsx";
+import Dashboard from "../admin/Dashboard.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 
@@ -38,17 +37,6 @@ const router = createBrowserRouter(
                         <PrivateRoute>
                             <Dashboard />
                         </PrivateRoute>
-                    }
-                />
-            </Route>
-
-            <Route path="user">
-                <Route
-                    path="login"
-                    element={
-                        <PublicRoute>
-                            <UserLogin />
-                        </PublicRoute>
                     }
                 />
             </Route>
