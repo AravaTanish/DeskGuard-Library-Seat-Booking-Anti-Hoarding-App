@@ -8,17 +8,14 @@ function LibraryList({ libraries, setLibraries }) {
     const navigate = useNavigate();
     const handleOnClick = async (library) => {
         try {
-            console.log("Library clicked:", library);
-            // const res = await api.get(`/admin/computer/fetch`, {
-            //     libraryId: library._id,
-            // });
-            // console.log("Fetched computers:", res.data.computers);
-            // if (!res.data.computers) {
-            //     setComputerData([]);
-            // } else {
-            //     setComputerData(res.data.computers);
-            // }
-            console.log("Navigating to Computer component with data:");
+            const res = await api.get(`/admin/computer/fetch`, {
+                libraryId: library._id,
+            });
+            if (!res.data.computers) {
+                setComputerData([]);
+            } else {
+                setComputerData(res.data.computers);
+            }
             navigate("/admin/computer", { state: { computerData, library } });
         } catch (err) {
             console.log(err);
