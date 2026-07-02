@@ -10,7 +10,7 @@ import Signin from "../admin/Signin.jsx";
 import Dashboard from "../admin/Dashboard.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
-
+import Computer from "../admin/Computer.jsx";
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
@@ -39,6 +39,15 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="computer"
+                    element={
+                        <PrivateRoute>
+                            <Computer />
+                        </PrivateRoute>
+                    }
+                />
+
             </Route>
         </Route>,
     ),
