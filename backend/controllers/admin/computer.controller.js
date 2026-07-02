@@ -51,7 +51,7 @@ export const fetchComputers = asyncHandler(async (req, res) => {
   });
 });
 
-export const deleteComputer = asyncHnadler(async (req, res) => {
+export const deleteComputer = asyncHandler(async (req, res) => {
   const { libraryId } = req.body;
   const { computerId } = req.params;
   const id = req.user.id;
