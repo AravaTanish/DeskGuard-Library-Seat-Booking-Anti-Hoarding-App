@@ -48,7 +48,7 @@ export const deleteLibraries = asyncHandler(async (req, res) => {
   }
 
   const { libraryId } = req.params;
-  const library = await Library.findOne({ _id: libraryId, adminId: id });
+  const library = await Library.exists({ _id: libraryId, adminId: id });
   if (!library) {
     throw new AppError("Library not found", 404);
   }
