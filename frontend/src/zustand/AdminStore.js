@@ -5,6 +5,9 @@ const adminStore = (set) => ({
     email: "",
     loading: true,
     isLoggedIn: false,
+    library: null,
+    computerData: [],
+    libraries: [],
     setEmail: function (email) {
         set({ email: email });
     },
@@ -14,13 +17,25 @@ const adminStore = (set) => ({
     setIsLoggedIn: function (isLoggedIn) {
         set({ isLoggedIn: isLoggedIn });
     },
+    setLibrary: function (library) {
+        set({ library: library });
+    },
+    setLibraries: function (libraries) {
+        set({ libraries: libraries });
+    },
+    setComputerData: function (computerData) {
+        set({ computerData: computerData });
+    },
 });
 
 const useAdminStore = create(
     persist(adminStore, {
         name: "admin-storage",
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({ isLoggedIn: state.isLoggedIn }),
+        partialize: (state) => ({
+            isLoggedIn: state.isLoggedIn,
+            library: state.library,
+        }),
     }),
 );
 export default useAdminStore;

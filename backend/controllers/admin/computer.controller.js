@@ -5,7 +5,8 @@ import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
 
 export const addComputer = asyncHandler(async (req, res) => {
-  const { name, libraryId } = req.body;
+  const { name } = req.body;
+  const { libraryId } = req.params;
   if (!name?.trim()) {
     throw new AppError("Library name is required");
   }
@@ -20,7 +21,7 @@ export const addComputer = asyncHandler(async (req, res) => {
     throw new AppError("Computer name already exists in this library", 400);
   }
 
-  const computer = await Computer.create({ name, libraryId, adminId });
+  const computer = await Computer.create({ name, libraryId, adminId: id });
 
   return res.status(200).json({
     success: true,
@@ -30,13 +31,13 @@ export const addComputer = asyncHandler(async (req, res) => {
 });
 
 export const fetchComputers = asyncHandler(async (req, res) => {
-  const { libraryId } = req.body;
+  const { libraryId } = req.params;
   const id = req.user.id;
   const adminExists = await Admin.exists({ _id: id });
   if (!adminExists) {
     throw new AppError("Admin not found", 404);
   }
-  if (!(await Library.exists({ libraryId, adminId: id }))) {
+  if (!(await Library.exists({ _id: libraryId, adminId: id }))) {
     throw new AppError("Library does not exists", 404);
   }
 
@@ -52,8 +53,7 @@ export const fetchComputers = asyncHandler(async (req, res) => {
 });
 
 export const deleteComputer = asyncHandler(async (req, res) => {
-  const { libraryId } = req.body;
-  const { computerId } = req.params;
+  const { computerId, libraryId } = req.params;
   const id = req.user.id;
   const adminExists = await Admin.exists({ _id: id });
   if (!adminExists) {

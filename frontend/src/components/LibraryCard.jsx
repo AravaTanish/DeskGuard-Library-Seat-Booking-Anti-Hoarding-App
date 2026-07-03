@@ -1,6 +1,7 @@
 import api from "../api/axios.js";
-
-function LibraryCard({ onClick, library, setLibraries }) {
+import useAdminStore from "../zustand/AdminStore.js";
+function LibraryCard({ onClick, library}) {
+    const { setLibraries } = useAdminStore();
     const handleDelete = async () => {
         try {
             const res = await api.delete(

@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/admin/auth", authAdminRoutes);
 app.use("/api/admin/library", libararyRoutes);
-app.use("/api/admin/computer", computerRoutes);
+app.use("/api/admin/computer/:libraryId", computerRoutes);
 
 app.use(globalErrorMiddleware);
 

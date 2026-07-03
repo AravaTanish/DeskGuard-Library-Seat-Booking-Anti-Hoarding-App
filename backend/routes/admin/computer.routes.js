@@ -6,7 +6,7 @@ import {
   fetchComputers,
 } from "../../controllers/admin/computer.controller.js";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/fetch", authMiddleware, fetchComputers);
 router.post("/add", authMiddleware, addComputer);
