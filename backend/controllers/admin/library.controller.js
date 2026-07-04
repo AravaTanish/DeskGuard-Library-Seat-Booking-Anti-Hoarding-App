@@ -53,6 +53,17 @@ export const deleteLibraries = asyncHandler(async (req, res) => {
     throw new AppError("Library not found", 404);
   }
 
+  const computers = await Computer.find({ libraryId }).select("_id");
+  if (computers) {
+    const computerIds = computers.map((computer) => computer._id);
+  }
+
+  if (computerIds) {
+    await ActivationCode.deleteMany({
+      computerId: { $in: computerIds },
+    });
+  }
+
   await Computer.deleteMany({ libraryId: libraryId });
   await Library.findByIdAndDelete(libraryId);
 
