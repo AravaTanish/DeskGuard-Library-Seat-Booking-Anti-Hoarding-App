@@ -1,42 +1,99 @@
-function DisplayComputer({ computers }) {
+import { Monitor, Trash2 } from "lucide-react";
+import api from "../api/axios.js";
+import toast from "react-hot-toast";
+import useAdminStore from "../zustand/AdminStore.js";
+import { useState } from "react";
+import ActivationCode from "./ActivationCode.jsx";
+
+function DisplayComputer() {
+    const [showActivationCode, setShowActivationCode] = useState(false);
+    const { computerData, library, setComputerData } = useAdminStore();
+    const handleActivate = async() => {
+        try{
+            const res = await api.put(`/admin/computer/${library._id}/get-activation-code`);
+            if(res.data.success){
+                toast.success("Activation code sent successfully");
+                setShowActivationCode(true);
+            }
+        }catch(err){
+            console.error("Error sending activation code:", err);
+            toast.error("Failed to send activation code");
+        }
+    };
+    const handleDelete = async (computerId) => {
+        try {
+            const res = await api.delete(
+                `/admin/computer/${library._id}/delete/${computerId}`,
+            );
+            if (res.data.success) {
+                toast.success("Computer deleted successfully");
+
+                const updatedComputers = computerData.filter(
+                    (c) => c._id !== computerId,
+                );
+
+                setComputerData(updatedComputers);
+            }
+        } catch (err) {
+            console.error("Error deleting computer:", err);
+        }
+    };
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {computers.map((computer) => (
+        <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5 gap-4">
+            {computerData.map((computer) => (
                 <div
                     key={computer._id}
-                    className="bg-white border rounded-lg shadow-sm p-5"
+                    className="w-50 bg-white rounded-lg py-4 px-2 shadow flex flex-col items-center"
                 >
-                    <h2 className="text-lg font-semibold">
-                        Computer Name: {computer.name}
+                    {/* Computer Name */}
+                    <h2 className="text-xl font-semibold mb-3 text-center">
+                        {computer.name}
                     </h2>
 
-                    <div className="mt-3">
-                        <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                computer.isActive
-                                    ? "bg-green-100 text-green-700"
-                                    : "bg-red-100 text-red-700"
-                            }`}
-                        >
-                            {computer.isActive ? "Active" : "Inactive"}
-                        </span>
+                    {/* Icon Box */}
+                    <div
+                        className={`w-30 h-20 rounded-xl flex items-center justify-center mb-4 ${
+                            computer.isAvailable ? "bg-green-100" : "bg-red-100"
+                        }`}
+                    >
+                        <Monitor
+                            size={38}
+                            className={
+                                computer.isAvailable
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                            }
+                        />
                     </div>
 
-                    <div className="flex justify-between mt-5">
+                    {/* Buttons */}
+                    <div className="flex w-30 gap-1">
                         <button
-                            className={`px-4 py-2 rounded-md text-white ${
+                            onClick={() => handleActivate(computer._id)}
+                            className={`flex-1 py-1 text-xs rounded-md text-white transition ${
                                 computer.isActive
-                                    ? "bg-yellow-500 hover:bg-yellow-600"
+                                    ? "bg-red-500 hover:bg-red-600"
                                     : "bg-green-600 hover:bg-green-700"
                             }`}
                         >
                             {computer.isActive ? "Deactivate" : "Activate"}
                         </button>
 
-                        <button className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700">
-                            Delete
+                        <button
+                            onClick={() => handleDelete(computer._id)}
+                            className="w-8 h-8 rounded-md bg-red-500 hover:bg-red-600 flex justify-center items-center"
+                        >
+                            <Trash2 size={16} className="text-white" />
                         </button>
                     </div>
+                    {
+                        showActivationCode && (
+                            <ActivationCode
+                                code={computer.activationCode}
+                                onClose={() => setShowActivationCode(false)}
+                            />
+                        )
+                    }
                 </div>
             ))}
         </div>

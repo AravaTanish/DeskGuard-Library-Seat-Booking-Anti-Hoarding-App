@@ -2,20 +2,29 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../api/axios.js";
 import useAdminStore from "../zustand/AdminStore.js";
+import { X } from "lucide-react";
 
-function AddComputer() {
+function AddComputer({ closeForm }) {
     const [name, setName] = useState("");
-    const { library, setComputerData } = useAdminStore();
+    const {computerData, library, setComputerData } = useAdminStore();
 
-    const handleAddComputer = async () => {
-        // console.log("Adding computer to library:", library._id);
+    const handleAddComputer = async (e) => {
+        e.preventDefault();
+
         try {
             const res = await api.post(`/admin/computer/${library._id}/add`, {
                 name,
             });
+
             if (res.data.success) {
                 toast.success("Computer added successfully");
-                setComputerData((prevData) => [...prevData, res.data.computer]);
+
+                const newComputerData = [...computerData, res.data.computer];
+
+                setComputerData(newComputerData);
+
+                setName("");
+                closeForm(); // Close the modal after adding
             }
         } catch (err) {
             console.error("Error adding computer:", err);
@@ -24,32 +33,38 @@ function AddComputer() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <form
-                onSubmit={handleAddComputer}
-                className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+        <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+            {/* Close Button */}
+            <button
+                type="button"
+                onClick={closeForm}
+                className="absolute top-4 right-4 rounded-full p-1 text-gray-500 transition hover:bg-gray-100 hover:text-red-500"
             >
-                <h2 className="text-2xl font-semibold mb-6 text-center">
+                <X size={22} />
+            </button>
+
+            <form onSubmit={handleAddComputer}>
+                <h2 className="mb-6 text-center text-2xl font-semibold">
                     Add Computer
                 </h2>
 
-                <div className="mb-4">
-                    <label className="block mb-2 font-medium">
+                <div className="mb-5">
+                    <label className="mb-2 block font-medium">
                         Computer Name
                     </label>
+
                     <input
                         type="text"
-                        name="computerName"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Enter computer name"
-                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                    className="w-full rounded-md bg-blue-600 py-2 text-white transition hover:bg-blue-700"
                 >
                     Add Computer
                 </button>
