@@ -116,10 +116,10 @@ export const getAvtivationCode = asyncHandler(async (req, res) => {
   const code = generateActivationCode();
   const hashCode = hashActivationCode(code);
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000); //30 mins
-  const activationCode = await ActivationCode.findOne({ computerId });
-  if (!oldCode) {
+  let activationCode = await ActivationCode.findOne({ computerId });
+  if (!activationCode) {
     activationCode = await ActivationCode.create({
-      hashCode,
+      code: hashCode,
       computerId,
       expiresAt,
     });
