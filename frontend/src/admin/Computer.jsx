@@ -8,13 +8,15 @@ import api from "../api/axios.js";
 import DisplayComputer from "../components/DisplayComputer.jsx";
 
 function Computer() {
-    const {library, computerData, setComputerData } = useAdminStore();
+    const { library, computerData, setComputerData } = useAdminStore();
     const activeCount = computerData.filter((c) => c.isActivated).length;
     const [showForm, setShowForm] = useState(false);
     useEffect(() => {
-        try{
+        try {
             const fetchComputers = async () => {
-                const res = await api.get(`/admin/computer/${library._id}/fetch`);
+                const res = await api.get(
+                    `/admin/computer/${library._id}/fetch`,
+                );
                 if (res.data.success) {
                     setComputerData(res.data.computers);
                 }
@@ -23,9 +25,8 @@ function Computer() {
         } catch (err) {
             console.error("Error fetching computers:", err);
         }
-    },[library._id, setComputerData]);
+    }, [library._id, setComputerData]);
 
-    
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             {/* Header */}
@@ -54,11 +55,13 @@ function Computer() {
                 </button>
             </div>
             {showForm && (
-                <AddComputer
-                    libraryId={library._id}
-                    setComputerData={setComputerData}
-                    closeForm={() => setShowForm(false)}
-                />
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                    <AddComputer
+                        libraryId={library._id}
+                        setComputerData={setComputerData}
+                        closeForm={() => setShowForm(false)}
+                    />
+                </div>
             )}
 
             {/* Stats */}
@@ -113,8 +116,7 @@ function Computer() {
                     </p>
                 </div>
             ) : (
-
-                <DisplayComputer computers={computerData} />
+                <DisplayComputer />
             )}
         </div>
     );
