@@ -8,14 +8,21 @@ import ActivationCode from "./ActivationCode.jsx";
 function DisplayComputer() {
     const [showActivationCode, setShowActivationCode] = useState(false);
     const { computerData, library, setComputerData } = useAdminStore();
-    const handleActivate = async() => {
-        try{
-            const res = await api.put(`/admin/computer/${library._id}/get-activation-code`);
-            if(res.data.success){
+    const [activationCode, setActivationCode] = useState("");
+    const handleActivate = async (computerId) => {
+        try {
+            const res = await api.put(
+                `/admin/computer/${library._id}/get-activation-code`,
+                {
+                    computerId: computerId,
+                },
+            );
+            if (res.data.success) {
                 toast.success("Activation code sent successfully");
+                setActivationCode(res.data.activationCode);
                 setShowActivationCode(true);
             }
-        }catch(err){
+        } catch (err) {
             console.error("Error sending activation code:", err);
             toast.error("Failed to send activation code");
         }
@@ -86,14 +93,14 @@ function DisplayComputer() {
                             <Trash2 size={16} className="text-white" />
                         </button>
                     </div>
-                    {
-                        showActivationCode && (
+                    {showActivationCode && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
                             <ActivationCode
-                                code={computer.activationCode}
+                                code={activationCode}
                                 onClose={() => setShowActivationCode(false)}
                             />
-                        )
-                    }
+                        </div>
+                    )}
                 </div>
             ))}
         </div>
