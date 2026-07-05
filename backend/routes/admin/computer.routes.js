@@ -4,7 +4,7 @@ import {
   addComputer,
   deleteComputer,
   fetchComputers,
-  getAvtivationCode,
+  getActivationCode,
 } from "../../controllers/admin/computer.controller.js";
 
 const router = express.Router({ mergeParams: true });
@@ -12,6 +12,6 @@ const router = express.Router({ mergeParams: true });
 router.get("/fetch", authMiddleware, fetchComputers);
 router.post("/add", authMiddleware, addComputer);
 router.delete("/delete/:computerId", authMiddleware, deleteComputer);
-router.put("/get-activation-code", authMiddleware, getAvtivationCode);
+router.put("/get-activation-code", authMiddleware, getActivationCode);
 
 export default router;

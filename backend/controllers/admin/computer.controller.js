@@ -4,10 +4,7 @@ import Computer from "../../models/Computer.model.js";
 import ActivationCode from "../../models/ActivationCode.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
-import {
-  generateActivationCode,
-  hashActivationCode,
-} from "../../utils/activationCode.js";
+import { generateActivationCode } from "../../utils/activationCode.js";
 
 export const addComputer = asyncHandler(async (req, res) => {
   const { name } = req.body;
@@ -89,7 +86,7 @@ export const deleteComputer = asyncHandler(async (req, res) => {
   });
 });
 
-export const getAvtivationCode = asyncHandler(async (req, res) => {
+export const getActivationCode = asyncHandler(async (req, res) => {
   const { computerId } = req.body;
   const { libraryId } = req.params;
   if (!libraryId) {
@@ -113,23 +110,26 @@ export const getAvtivationCode = asyncHandler(async (req, res) => {
     throw new AppError("Computer does not exists", 404);
   }
 
-  const code = generateActivationCode();
-  const hashCode = hashActivationCode(code);
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000); //30 mins
   let activationCode = await ActivationCode.findOne({ computerId });
   if (!activationCode) {
+    const code = generateActivationCode();
     activationCode = await ActivationCode.create({
-      code: hashCode,
+      code,
       computerId,
       expiresAt,
     });
+  } else if (activationCode.expiresAt <= new Date()) {
+    const code = generateActivationCode();
+    activationCode.code = code;
+    activationCode.expiresAt = expiresAt;
+    await activationCode.save();
   }
-  activationCode.code = hashCode;
-  activationCode.expiresAt = expiresAt;
 
   return res.status(200).json({
     success: true,
     message: "Activation code generated successfully",
-    activationCode: code,
+    activationCode: activationCode.code,
+    expiresAt: activationCode.expiresAt,
   });
 });
