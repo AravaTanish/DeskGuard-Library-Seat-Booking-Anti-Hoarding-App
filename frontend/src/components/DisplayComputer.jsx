@@ -94,7 +94,7 @@ function DisplayComputer() {
                         </button>
                     </div>
                     {showActivationCode && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm">
                             <ActivationCode
                                 code={activationCode}
                                 onClose={() => setShowActivationCode(false)}

@@ -5,7 +5,7 @@ import useAdminStore from "../zustand/AdminStore.js";
     
 
 function AddLibrary({ closeForm }) {
-    const { setLibraries } = useAdminStore();
+    const {libraries, setLibraries} = useAdminStore();
     const [libraryName, setLibraryName] = useState("");
     const handleCreate = async (e) => {
         e.preventDefault();
@@ -15,11 +15,9 @@ function AddLibrary({ closeForm }) {
             });
             if (res.data.success) {
                 toast.success("Library created successfully!");
+                const updatedLibraries = [...libraries, res.data.library];
 
-                setLibraries((prevLibraries) => [
-                    ...prevLibraries,
-                    res.data.library,
-                ]);
+                setLibraries(updatedLibraries);
                 closeForm();
             }
             setLibraryName("");
