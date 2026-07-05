@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export const generateActivationCode = () => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
