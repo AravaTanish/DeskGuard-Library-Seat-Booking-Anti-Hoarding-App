@@ -1,16 +1,17 @@
 import api from "../api/axios.js";
 import useAdminStore from "../zustand/AdminStore.js";
-function LibraryCard({ onClick, library}) {
-    const { setLibraries } = useAdminStore();
+function LibraryCard({ onClick, library }) {
+    const { libraries, setLibraries } = useAdminStore();
     const handleDelete = async () => {
         try {
             const res = await api.delete(
                 `/admin/library/delete/${library._id}`,
             );
             if (res.data.success) {
-                setLibraries((prevLibraries) =>
-                    prevLibraries.filter((l) => l._id !== library._id),
+                const updatedLibraries = libraries.filter(
+                    (l) => l._id !== library._id,
                 );
+                setLibraries(updatedLibraries);
             }
         } catch (err) {
             console.log(err);
@@ -24,7 +25,10 @@ function LibraryCard({ onClick, library}) {
             <h2 className="text-lg font-semibold">{library.name}</h2>
 
             <button
-                onClick={handleDelete}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                }}
                 className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
             >
                 Remove

@@ -33,7 +33,7 @@ function AddComputer({ closeForm }) {
     };
 
     return (
-        <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+        <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-none">
             {/* Close Button */}
             <button
                 type="button"
