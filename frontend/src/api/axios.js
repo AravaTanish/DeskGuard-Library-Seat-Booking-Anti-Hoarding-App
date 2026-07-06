@@ -12,7 +12,11 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      error.response?.data.message === "Access token expired" &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {

@@ -31,6 +31,10 @@ const computerSchema = new mongoose.Schema(
       default: "free",
     },
 
+    sessionCode: {
+      type: String,
+    },
+
     currentSession: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Session",
