@@ -14,4 +14,5 @@ router.post("/add", authMiddleware("admin"), addComputer);
 router.delete("/delete/:computerId", authMiddleware("admin"), deleteComputer);
 router.put("/get-activation-code", authMiddleware("admin"), getActivationCode);
 
+
 export default router;
