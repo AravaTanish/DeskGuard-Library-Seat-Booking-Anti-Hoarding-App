@@ -9,10 +9,10 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/fetch", authMiddleware, fetchComputers);
-router.post("/add", authMiddleware, addComputer);
-router.delete("/delete/:computerId", authMiddleware, deleteComputer);
-router.put("/get-activation-code", authMiddleware, getActivationCode);
+router.get("/fetch", authMiddleware("admin"), fetchComputers);
+router.post("/add", authMiddleware("admin"), addComputer);
+router.delete("/delete/:computerId", authMiddleware("admin"), deleteComputer);
+router.put("/get-activation-code", authMiddleware("admin"), getActivationCode);
 
 
 export default router;

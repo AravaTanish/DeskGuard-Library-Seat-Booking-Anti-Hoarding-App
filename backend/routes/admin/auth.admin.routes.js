@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/sign-in", signin);
 router.put("/login", login);
 router.put("/refresh", refresh);
-router.get("/me", authMiddleware, me);
+router.get("/me", authMiddleware("admin"), me);
 
 export default router;

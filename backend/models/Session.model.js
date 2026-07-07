@@ -17,6 +17,11 @@ const sessionSchema = new mongoose.Schema(
       ref: "Computer",
     },
 
+    refreshToken: {
+      type: String,
+      select: false,
+    },
+
     startTime: {
       type: Date,
       required: true,
@@ -32,12 +37,10 @@ const sessionSchema = new mongoose.Schema(
 
     breakStartTime: {
       type: Date,
-      required: true,
     },
 
     breakEndTime: {
       type: Date,
-      required: true,
     },
   },
   { timestamps: true },
