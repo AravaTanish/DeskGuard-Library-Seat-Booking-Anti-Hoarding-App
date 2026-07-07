@@ -11,6 +11,8 @@ import Dashboard from "../admin/Dashboard.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 import Computer from "../admin/Computer.jsx";
+import ComputerActivate from "../client/pages/ComputerActivate.jsx";
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
@@ -47,7 +49,16 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
-
+            </Route>
+            <Route path="computer">
+                <Route
+                    path="activate"
+                    element={
+                        <PublicRoute>
+                            <ComputerActivate />
+                        </PublicRoute>
+                    }
+                />
             </Route>
         </Route>,
     ),
