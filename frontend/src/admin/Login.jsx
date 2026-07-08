@@ -35,7 +35,13 @@ function Login() {
     };
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
-            <Card className="w-full max-w-md rounded-2xl border border-gray-200 shadow-xl p-4">
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+                className="w-full max-w-md rounded-2xl border border-gray-200 shadow-xl p-4"
+            >
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-gray-800">Login</h1>
                 </div>
@@ -88,7 +94,8 @@ function Login() {
 
                     <Button
                         size="lg"
-                        onClick={handleSubmit}
+                        type="submit"
+                        // onClick={handleSubmit}
                         className="h-10 mt-2 rounded-lg bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-white text-center width-full"
                     >
                         Login
@@ -109,7 +116,7 @@ function Login() {
                         </button>
                     </p>
                 </div>
-            </Card>
+            </form>
         </div>
     );
 }
