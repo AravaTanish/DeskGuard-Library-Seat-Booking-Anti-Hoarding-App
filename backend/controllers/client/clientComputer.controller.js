@@ -15,11 +15,16 @@ export const verifyActivationCode = asyncHandler(async (req, res) => {
     if (code.length < 12) {
         throw new AppError("Enter full activation code", 400);
     }
-    const activationCode = await ActivationCode.findOne({ code }).populate("computerId");
+    const activationCode = await ActivationCode.findOne({ code }).populate({
+        path: "computerId",
+        select:"_id isActivated",
+    });
     if (!activationCode) {
         throw new AppError("Invalid activation code", 400);
     }
-
+    // if(activationCode.computerId.isActivated === true){
+    //     throw new AppError("Computer already activated", 400);
+    // }
     activationCode.computerId.isActivated = true;
     console.log("Computer activated:", activationCode.computerId);
     await activationCode.computerId.save();
