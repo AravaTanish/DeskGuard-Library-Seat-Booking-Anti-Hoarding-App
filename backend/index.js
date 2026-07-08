@@ -30,7 +30,7 @@ app.use("/api/admin/computer/:libraryId", computerRoutes);
 app.use("/api/client/computer", clientComputerRoutes);
 
 // client routes
-app.use("/api/client/session/:computerId", sessionRoutes);
+app.use("/api/client/session/", sessionRoutes);
 
 app.use(globalErrorMiddleware);
 

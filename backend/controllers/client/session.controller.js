@@ -28,6 +28,9 @@ export const createSession = asyncHandler(async (req, res) => {
   if (!computer) {
     throw new AppError("Computer does not exist", 404);
   }
+  if (!computer.isActivated) {
+    throw new AppError("The computer is not activated", 400);
+  }
   if (computer.currentSession) {
     throw new AppError("This computer already occupied", 400);
   }
