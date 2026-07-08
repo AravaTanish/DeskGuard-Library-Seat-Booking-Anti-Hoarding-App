@@ -33,7 +33,6 @@ const computerSchema = new mongoose.Schema(
 
     sessionCode: {
       type: String,
-      default: "1234",
     },
 
     currentSession: {
