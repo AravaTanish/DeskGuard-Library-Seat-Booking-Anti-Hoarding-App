@@ -4,9 +4,9 @@ import {
   refresh,
 } from "../../controllers/client/session.controller.js";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
-router.post("/create-session", createSession);
+router.post("/:computerId/create-session", createSession);
 router.put("/refresh", refresh);
 
 export default router;

@@ -1,10 +1,16 @@
 import { useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import sessionApi from "../../api/sessionAxios";
 
 export default function StudentLogin() {
   const [name, setName] = useState("");
   const [roll, setRoll] = useState("");
   const [code, setCode] = useState(["", "", "", ""]);
+  const navigate = useNavigate();
   const inputs = useRef([]);
+  const { computerId } = useParams();
 
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
@@ -29,6 +35,21 @@ export default function StudentLogin() {
     roll.trim() !== "" &&
     code.every((digit) => digit !== "");
 
+  const handleCreateSession = async () => {
+    try {
+      const res = await sessionApi.post(
+        `/client/session/${computerId}/create-session`,
+        { name, roll, code: code.join("") },
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate(`/client/session/${computerId}`);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-sm rounded-3xl bg-white shadow-2xl border border-green-100 p-6">
@@ -36,7 +57,7 @@ export default function StudentLogin() {
           Student Login
         </h1>
 
-        <form className="space-y-5">
+        <div className="space-y-5">
           {/* Name */}
           <input
             value={name}
@@ -79,7 +100,7 @@ export default function StudentLogin() {
           </div>
 
           <button
-            type="submit"
+            onClick={handleCreateSession}
             disabled={!isFormValid}
             className={`w-full h-14 rounded-xl text-lg font-semibold shadow-lg transition-all ${
               isFormValid
@@ -89,7 +110,7 @@ export default function StudentLogin() {
           >
             Start Session
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

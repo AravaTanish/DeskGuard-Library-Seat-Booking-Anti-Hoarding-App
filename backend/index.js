@@ -28,7 +28,7 @@ app.use("/api/admin/library", libararyRoutes);
 app.use("/api/admin/computer/:libraryId", computerRoutes);
 
 // client routes
-app.use("/api/client/session/:computerId", sessionRoutes);
+app.use("/api/client/session/", sessionRoutes);
 
 app.use(globalErrorMiddleware);
 
