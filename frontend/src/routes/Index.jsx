@@ -13,6 +13,7 @@ import Computer from "../admin/Computer.jsx";
 import StudentLogin from "../client/pages/StudentLogin.jsx";
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 import Session from "../client/pages/Session.jsx";
+import ComputerHomePage from "../client/pages/ComputerHomePage.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -58,6 +59,9 @@ const router = createBrowserRouter(
                             </PublicRoute>
                         }
                     />
+                    <Route path="home" element={
+                        <ComputerHomePage/>
+                    } />
                     <Route path=":computerId">
                         <Route path="create-session" element={
                             <PublicRoute>
