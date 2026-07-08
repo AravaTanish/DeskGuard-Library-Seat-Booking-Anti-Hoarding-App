@@ -9,7 +9,6 @@ import computerRoutes from "./routes/admin/computer.routes.js";
 import clientComputerRoutes from "./routes/client/clientComputer.routes.js";
 import sessionRoutes from "./routes/client/session.routes.js";
 
-import clientComputerRoutes from "./routes/client/clientComputer.routes.js";
 import globalErrorMiddleware from "./middlewares/globalError.middleware.js";
 
 const app = express();

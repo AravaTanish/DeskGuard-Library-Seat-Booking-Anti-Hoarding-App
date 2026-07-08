@@ -11,10 +11,7 @@ import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 import Computer from "../admin/Computer.jsx";
 import StudentLogin from "../client/pages/StudentLogin.jsx";
-
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
-
-import StudentLogin from "../client/pages/StudentLogin.jsx";
 import Session from "../client/pages/Session.jsx";
 
 const router = createBrowserRouter(
