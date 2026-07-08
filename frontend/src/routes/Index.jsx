@@ -10,6 +10,8 @@ import Dashboard from "../admin/Dashboard.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 import Computer from "../admin/Computer.jsx";
+import StudentLogin from "../client/pages/StudentLogin.jsx";
+
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 
 import StudentLogin from "../client/pages/StudentLogin.jsx";
@@ -51,6 +53,13 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+            </Route>
+            <Route path="computer">
+                    <Route path="create-session" element={
+                        <PublicRoute>
+                            <StudentLogin />
+                        </PublicRoute>
+                    }/>
             </Route>
             <Route path="computer">
                 <Route
