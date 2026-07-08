@@ -52,31 +52,18 @@ const router = createBrowserRouter(
                 />
             </Route>
             <Route path="computer">
-                    <Route path="create-session" element={
-                        <PublicRoute>
-                            <StudentLogin />
-                        </PublicRoute>
-                    }/>
-            </Route>
-            <Route path="computer">
-                <Route
-                    path="activate"
-                    element={
-                        <PublicRoute>
-                            <ComputerActivate />
-                        </PublicRoute>
-                    }
-                />
-            </Route>
-            <Route path="computer">
-                <Route path=":computerId">
-                    <Route 
-                        path="create-session" 
-                        element={
-                        <PublicRoute>
-                            <StudentLogin />
-                        </PublicRoute>
-                    }/>
+                    <Route path="activate" element={
+                            <PublicRoute>
+                                <ComputerActivate />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route path=":computerId">
+                        <Route path="create-session" element={
+                            <PublicRoute>
+                                <StudentLogin />
+                            </PublicRoute>
+                        }/>
                 </Route>
             </Route>
             <Route path="client">
