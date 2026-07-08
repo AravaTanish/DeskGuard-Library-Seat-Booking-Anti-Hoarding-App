@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios.js";
 import AddLibrary from "../components/AddLibrary.jsx";
+import useAdminStore from "../zustand/AdminStore.js";
 import LibraryList from "../components/LibraryList.jsx";
 
 function Dashboard() {
-  const [libraries, setLibraries] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const { setLibraries } = useAdminStore();
 
   useEffect(() => {
     const fetchLibraries = async () => {
@@ -19,7 +20,7 @@ function Dashboard() {
       }
     };
     fetchLibraries();
-  }, []);
+  }, [setLibraries]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -42,7 +43,7 @@ function Dashboard() {
           />
         )}
 
-        <LibraryList libraries={libraries} setLibraries={setLibraries} />
+        <LibraryList />
       </div>
     </div>
   );

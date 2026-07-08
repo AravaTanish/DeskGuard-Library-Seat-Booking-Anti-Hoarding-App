@@ -1,12 +1,11 @@
 import axios from "axios";
 
-const api = axios.create({
+const sessionApi = axios.create({
   baseURL: `${import.meta.env.VITE_BASE_URL}/api/`,
   withCredentials: true,
 });
 
-//this is for recieving responce
-api.interceptors.response.use(
+sessionApi.interceptors.response.use(
   (response) => response,
 
   async (error) => {
@@ -20,9 +19,9 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.put("/admin/auth/refresh");
+        await sessionApi.put("/client/session/refresh");
 
-        return api(originalRequest);
+        return sessionApi(originalRequest);
       } catch (err) {
         return Promise.reject(err);
       }
@@ -31,4 +30,4 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-export default api;
+export default sessionApi;

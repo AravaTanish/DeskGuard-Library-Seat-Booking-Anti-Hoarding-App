@@ -1,6 +1,7 @@
 import Library from "../../models/Library.model.js";
 import Admin from "../../models/Admin.model.js";
 import Computer from "../../models/Computer.model.js";
+import ActivationCode from "../../models/ActivationCode.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
 
@@ -48,9 +49,19 @@ export const deleteLibraries = asyncHandler(async (req, res) => {
   }
 
   const { libraryId } = req.params;
-  const library = await Library.findOne({ _id: libraryId, adminId: id });
+  const library = await Library.exists({ _id: libraryId, adminId: id });
   if (!library) {
     throw new AppError("Library not found", 404);
+  }
+
+  const computers = await Computer.find({ libraryId }).select("_id");
+  if (computers) {
+    const computerIds = computers.map((computer) => computer._id);
+    if (computerIds) {
+      await ActivationCode.deleteMany({
+        computerId: { $in: computerIds },
+      });
+    }
   }
 
   await Computer.deleteMany({ libraryId: libraryId });

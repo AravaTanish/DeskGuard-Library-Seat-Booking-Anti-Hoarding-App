@@ -8,8 +8,8 @@ import {
 
 const router = express.Router();
 
-router.get("/fetch", authMiddleware, fetchLibraries);
-router.post("/create", authMiddleware, createLibrary);
-router.delete("/delete/:libraryId", authMiddleware, deleteLibraries);
+router.get("/fetch", authMiddleware("admin"), fetchLibraries);
+router.post("/create", authMiddleware("admin"), createLibrary);
+router.delete("/delete/:libraryId", authMiddleware("admin"), deleteLibraries);
 
 export default router;

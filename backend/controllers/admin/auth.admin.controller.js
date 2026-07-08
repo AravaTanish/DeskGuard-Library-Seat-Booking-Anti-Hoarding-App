@@ -58,8 +58,8 @@ export const login = asyncHandler(async (req, res) => {
     throw new AppError("Incorrect Password, try again", 400);
   }
 
-  const accessToken = generateAccessToken(admin._id);
-  const refreshToken = generateRefreshToken(admin._id);
+  const accessToken = generateAccessToken(admin._id, "admin");
+  const refreshToken = generateRefreshToken(admin._id, "admin");
 
   admin.refreshToken = refreshToken;
   await admin.save();
@@ -69,7 +69,7 @@ export const login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     path: "/",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
+    maxAge: 100 * 24 * 60 * 60 * 1000,
   });
 
   res.cookie("accessToken", accessToken, {
@@ -77,7 +77,7 @@ export const login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     path: "/",
-    maxAge: 15 * 60 * 1000,
+    maxAge: 100 * 24 * 60 * 60 * 1000,
   });
   return res.status(200).json({
     success: true,
@@ -86,18 +86,24 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
-export const me = asyncHandler(async (req, res) => {
-  const id = req.user.id;
-  const admin = await Admin.findById(id).lean();
-  if (!admin) {
-    throw new AppError("Admin not found", 404);
+export const me = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const admin = await Admin.findById(id).lean();
+    if (!admin) {
+      throw new AppError("Admin not found", 404);
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Admin details fetched",
+      email: admin.email,
+    });
+  } catch (error) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Not logged in as admin role" });
   }
-  return res.status(200).json({
-    success: true,
-    message: "Admin details fetched",
-    email: admin.email,
-  });
-});
+};
 
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
@@ -105,10 +111,12 @@ export const refresh = asyncHandler(async (req, res) => {
     throw new AppError("Refresh token missing", 404);
   }
 
-  const decoded = jwt.verify(
-    refreshToken,
-    process.env.JWT_REFRESH_TOKEN_SECRET,
-  );
+  let decoded;
+  try {
+    decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET);
+  } catch {
+    throw new AppError("Invalid or expired refresh token", 400);
+  }
 
   const admin = await Admin.findById(decoded.id).select("+refreshToken");
   if (!admin) {
@@ -118,14 +126,14 @@ export const refresh = asyncHandler(async (req, res) => {
     throw new AppError("Invalid refresh token", 404);
   }
 
-  const newAccessToken = generateAccessToken(admin._id);
+  const newAccessToken = generateAccessToken(admin._id, "admin");
   res.cookie("accessToken", newAccessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-    maxAge: 15 * 60 * 1000,
+    maxAge: 100 * 24 * 60 * 60 * 1000,
   });
-  
+
   return res.status(200).json({
     success: true,
     message: "New access token generated successfully",
