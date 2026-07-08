@@ -1,6 +1,9 @@
 const globalErrorMiddleware = (err, req, res, next) => {
-  console.log(err);
   const statusCode = err.statusCode || 500;
+
+  if (statusCode >= 500) {
+    console.error(err);
+  }
 
   res.status(statusCode).json({
     success: false,

@@ -18,13 +18,13 @@ const authMiddleware = (role) => {
       }
 
       if (!token) {
-        throw new AppError("Unauthorized", 401);
+        throw new AppError("Unauthorized: No token provided", 401);
       }
 
       const decoded = jwt.verify(token, secret);
 
       if (decoded.role !== role) {
-        throw new AppError("Unauthorized", 401);
+        throw new AppError("Unauthorized: Invalid token", 401);
       }
 
       req.user = {
@@ -34,6 +34,10 @@ const authMiddleware = (role) => {
 
       next();
     } catch (err) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+      
       if (err.name === "TokenExpiredError") {
         throw new AppError("Access token expired", 401);
       }

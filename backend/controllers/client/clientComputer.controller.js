@@ -17,7 +17,7 @@ export const verifyActivationCode = asyncHandler(async (req, res) => {
     }
     const activationCode = await ActivationCode.findOne({ code }).populate({
         path: "computerId",
-        select:"_id isActivated",
+        select:"_id isActivated +refreshToken",
     });
     if (!activationCode) {
         throw new AppError("Invalid activation code", 400);
@@ -25,14 +25,15 @@ export const verifyActivationCode = asyncHandler(async (req, res) => {
     // if(activationCode.computerId.isActivated === true){
     //     throw new AppError("Computer already activated", 400);
     // }
-    activationCode.computerId.isActivated = true;
-    console.log("Computer activated:", activationCode.computerId);
-    await activationCode.computerId.save();
 
     const computerId = activationCode.computerId._id;
 
     const accessToken = generateAccessToken(computerId, "computer");
     const refreshToken = generateRefreshToken(computerId, "computer");
+
+    activationCode.computerId.isActivated = true;
+    activationCode.computerId.refreshToken = refreshToken;
+    await activationCode.computerId.save();
 
     res.cookie("computerAccessToken", accessToken, {
         httpOnly: true,
@@ -49,11 +50,23 @@ export const verifyActivationCode = asyncHandler(async (req, res) => {
         maxAge: 100 * 24 * 60 * 60 * 1000,
     });
 
-    console.log("Activation code found:", activationCode);
     return res.status(200).json({
         success: true,
         message: "Activation code is valid",
     });
+});
+
+export const me = asyncHandler(async (req, res) => {
+  const id = req.user.id;
+  const computer = await Computer.findById(id);
+  if (!computer) {
+    throw new AppError("Computer not found", 404);
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Computer details fetched",
+    id: computer._id,
+  });
 });
 
 export const refresh = asyncHandler(async (req, res) => {
