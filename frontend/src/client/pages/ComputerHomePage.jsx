@@ -1,10 +1,12 @@
 import QRCode from "react-qr-code";
 import { useEffect, useState } from "react";
+import useComputerStore from "../../zustand/ComputerStore.js";
 
 function ComputerHomePage() {
     const [code, setCode] = useState("");
-    
-    const qrData = "http://localhost:5173/verify/CMP001";
+    const { computer } = useComputerStore();
+
+    const qrData = `http://localhost:5173/computer/${computer._id}/create-session`;
 
     const generateVerificationCode = () => {
         return Math.floor(1000 + Math.random() * 9000).toString();
@@ -40,7 +42,6 @@ function ComputerHomePage() {
         const interval = setInterval(() => {
             loadCode();
         }, 1000);
-
         return () => clearInterval(interval);
     }, []);
 
@@ -48,16 +49,12 @@ function ComputerHomePage() {
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
                 <h1 className="text-3xl font-bold text-center text-green-600">
-                    Verify Your Presence
+                    Computer Name: {computer.name}
                 </h1>
-
-                <p className="text-center text-gray-500 mt-2">
-                    Scan the QR code using the DeskGuard app.
-                </p>
 
                 <div className="mt-8 flex justify-center">
                     <div className="bg-white p-4 rounded-xl border">
-                        <QRCode value={qrData} size={240} />
+                        <QRCode value={qrData} size={220} />
                     </div>
                 </div>
 
@@ -68,7 +65,6 @@ function ComputerHomePage() {
                         {code}
                     </div>
                 </div>
-
                 <div className="mt-8 bg-green-50 border border-green-200 rounded-xl p-4">
                     <p className="text-center text-sm text-gray-600">
                         Scan the QR code and enter the verification code in the

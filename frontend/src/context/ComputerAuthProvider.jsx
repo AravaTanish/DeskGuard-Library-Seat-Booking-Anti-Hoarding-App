@@ -4,7 +4,7 @@ import computerApi from "../api/computerAxios.js";
 import useComputerStore from "../zustand/ComputerStore.js";
 
 const ComputerAuthProvider = ({ children }) => {
-  const { setComputerId, setIsLoggedIn, setLoading } = useComputerStore();
+  const { setComputer, setIsLoggedIn, setLoading } = useComputerStore();
 
   useEffect(() => {
     const fetchComputer = async () => {
@@ -12,11 +12,11 @@ const ComputerAuthProvider = ({ children }) => {
         const res = await computerApi.get("/client/computer/me");
 
         if (res.data.success) {
-          setComputerId(res.data.computerId);
+          setComputer(res.data.computer);
           setIsLoggedIn(true);
         }
       } catch {
-        setComputerId(null);
+        setComputer(null);
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
@@ -24,7 +24,7 @@ const ComputerAuthProvider = ({ children }) => {
     };
 
     fetchComputer();
-  }, [setComputerId, setIsLoggedIn, setLoading]);
+  }, [setComputer, setIsLoggedIn, setLoading]);
 
   return children;
 };

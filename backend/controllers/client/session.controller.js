@@ -87,7 +87,7 @@ export const me = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Session details fetched",
-    id: session._id,
+    sessionId: session._id,
   });
 });
 

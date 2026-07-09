@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 const computerStore = (set) => ({
-  computerId: null,
+  computer: null,
   isLoggedIn: false,
   loading: true,
 
-  setComputerId: (computerId) =>
+  setComputer: (computer) =>
     set({
-      computerId,
+      computer,
     }),
 
   setIsLoggedIn: (value) =>
