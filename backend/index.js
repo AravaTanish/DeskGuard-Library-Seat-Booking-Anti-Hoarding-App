@@ -2,6 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+import setupSocket from "./socket/socket.js";
 import connectDB from "./config/dbConnect.js";
 import authAdminRoutes from "./routes/admin/auth.admin.routes.js";
 import libararyRoutes from "./routes/admin/library.routes.js";
@@ -12,6 +16,17 @@ import sessionRoutes from "./routes/client/session.routes.js";
 import globalErrorMiddleware from "./middlewares/globalError.middleware.js";
 
 const app = express();
+
+const server = createServer(app);
+//for socket
+export const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  },
+});
+
+setupSocket(io);
 
 app.use(
   cors({
@@ -36,6 +51,6 @@ app.use(globalErrorMiddleware);
 
 await connectDB();
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is listening on port: ${process.env.PORT}`);
 });
