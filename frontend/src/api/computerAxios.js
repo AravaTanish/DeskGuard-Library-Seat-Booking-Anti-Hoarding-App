@@ -5,7 +5,7 @@ const computerApi = axios.create({
     withCredentials: true,
 });
 
-computerApi.intercepotors.responce.use(
+computerApi.interceptors.response.use(
     (responce) => responce,
     async (error) => {
         const originalRequest = error.config;

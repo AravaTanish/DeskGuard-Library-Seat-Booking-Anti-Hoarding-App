@@ -1,0 +1,34 @@
+import { Navigate } from "react-router-dom";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+
+import useAdminStore from "../../zustand/AdminStore.js";
+import useComputerStore from "../../zustand/ComputerStore.js";
+import useSessionStore from "../../zustand/SessionStore.js";
+
+const ComputerPrivateRoute = ({ children }) => {
+  const admin = useAdminStore();
+  const computer = useComputerStore();
+  const session = useSessionStore();
+
+  if (computer.loading) {
+    return <LoadingScreen message="Loading..." />;
+  }
+
+  // Session cannot access computer
+  if (session.isLoggedIn) {
+    return <Navigate to={`/client/session/${session.computerId}`} replace />;
+  }
+
+  // Admin cannot access computer
+  if (admin.isLoggedIn) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  if (!computer.isLoggedIn) {
+    return <Navigate to="/computer/activate" replace />;
+  }
+
+  return children;
+};
+
+export default ComputerPrivateRoute;

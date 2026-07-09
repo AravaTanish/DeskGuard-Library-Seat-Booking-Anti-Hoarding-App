@@ -78,6 +78,19 @@ export const createSession = asyncHandler(async (req, res) => {
   });
 });
 
+export const me = asyncHandler(async (req, res) => {
+  const id = req.user.id;
+  const session = await Session.findById(id);
+  if (!session) {
+    throw new AppError("Session not found", 404);
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Session details fetched",
+    id: session._id,
+  });
+});
+
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.sessionRefreshToken;
   if (!refreshToken) {
