@@ -65,7 +65,7 @@ export const me = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Computer details fetched",
-    id: computer._id,
+    computer: computer,
   });
 });
 

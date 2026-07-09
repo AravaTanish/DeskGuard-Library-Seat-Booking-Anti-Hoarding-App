@@ -5,6 +5,7 @@ import {
   refresh,
   signin,
   me,
+  logout
 } from "../../controllers/admin/auth.admin.controller.js";
 
 const router = express.Router();
@@ -13,5 +14,6 @@ router.post("/sign-in", signin);
 router.put("/login", login);
 router.put("/refresh", refresh);
 router.get("/me", authMiddleware("admin"), me);
+router.get("/logout", authMiddleware("admin"), logout);
 
 export default router;
