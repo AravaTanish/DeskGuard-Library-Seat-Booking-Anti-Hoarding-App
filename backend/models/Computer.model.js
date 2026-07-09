@@ -35,15 +35,19 @@ const computerSchema = new mongoose.Schema(
       type: String,
     },
 
+    sessionCodeExpiresAt: {
+      type: Date,
+    },
+
     currentSession: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Session",
     },
-    
+
     refreshToken: {
       type: String,
-      select: false
-    }
+      select: false,
+    },
   },
   { timestamps: true },
 );

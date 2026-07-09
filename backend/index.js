@@ -6,6 +6,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 import setupSocket from "./socket/socket.js";
+import startSessionCodeRotate from "./sessionCodeRotate.js";
 import connectDB from "./config/dbConnect.js";
 import authAdminRoutes from "./routes/admin/auth.admin.routes.js";
 import libararyRoutes from "./routes/admin/library.routes.js";
@@ -50,6 +51,7 @@ app.use("/api/client/session", sessionRoutes);
 app.use(globalErrorMiddleware);
 
 await connectDB();
+startSessionCodeRotate(io);
 
 server.listen(process.env.PORT, () => {
   console.log(`Server is listening on port: ${process.env.PORT}`);

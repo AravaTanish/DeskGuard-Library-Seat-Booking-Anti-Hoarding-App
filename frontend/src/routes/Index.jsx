@@ -22,6 +22,7 @@ import Computer from "../admin/Computer.jsx";
 import StudentLogin from "../client/pages/StudentLogin.jsx";
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 import ComputerHomePage from "../client/pages/ComputerHomePage.jsx";
+import StudentSuccess from "../client/pages/StudentSuccess.jsx";
 
 import Session from "../client/pages/Session.jsx";
 
@@ -90,11 +91,20 @@ const router = createBrowserRouter(
         />
 
         <Route
+          path="success"
+          element={
+            <ComputerPublicRoute>
+              <StudentSuccess />
+            </ComputerPublicRoute>
+          }
+        />
+
+        <Route
           path=":computerId/create-session"
           element={
-            <ComputerPrivateRoute>
+            <ComputerPublicRoute>
               <StudentLogin />
-            </ComputerPrivateRoute>
+            </ComputerPublicRoute>
           }
         />
       </Route>

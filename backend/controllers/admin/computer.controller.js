@@ -4,7 +4,7 @@ import Computer from "../../models/Computer.model.js";
 import ActivationCode from "../../models/ActivationCode.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
-import { generateActivationCode } from "../../utils/activationCode.js";
+import { generateCode } from "../../utils/code.js";
 
 export const addComputer = asyncHandler(async (req, res) => {
   const { name } = req.body;
@@ -113,14 +113,14 @@ export const getActivationCode = asyncHandler(async (req, res) => {
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000); //30 mins
   let activationCode = await ActivationCode.findOne({ computerId });
   if (!activationCode) {
-    const code = generateActivationCode();
+    const code = generateCode(8);
     activationCode = await ActivationCode.create({
       code,
       computerId,
       expiresAt,
     });
   } else if (activationCode.expiresAt <= new Date()) {
-    const code = generateActivationCode();
+    const code = generateCode(8);
     activationCode.code = code;
     activationCode.expiresAt = expiresAt;
     await activationCode.save();
