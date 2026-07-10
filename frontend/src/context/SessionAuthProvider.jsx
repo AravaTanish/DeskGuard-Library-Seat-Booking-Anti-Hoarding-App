@@ -4,7 +4,7 @@ import sessionApi from "../api/sessionAxios";
 import useSessionStore from "../zustand/SessionStore";
 
 const SessionAuthProvider = ({ children }) => {
-  const { setSessionId, setIsLoggedIn, setLoading } = useSessionStore();
+  const { setSession, setIsLoggedIn, setLoading } = useSessionStore();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -12,11 +12,11 @@ const SessionAuthProvider = ({ children }) => {
         const res = await sessionApi.get("/client/session/me");
 
         if (res.data.success) {
-          setSessionId(res.data.sessionId);
+          setSession(res.data.session);
           setIsLoggedIn(true);
         }
       } catch {
-        setSessionId(null);
+        setSession(null);
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
@@ -24,7 +24,7 @@ const SessionAuthProvider = ({ children }) => {
     };
 
     fetchSession();
-  }, [setIsLoggedIn, setLoading, setSessionId]);
+  }, [setIsLoggedIn, setLoading, setSession]);
 
   return children;
 };

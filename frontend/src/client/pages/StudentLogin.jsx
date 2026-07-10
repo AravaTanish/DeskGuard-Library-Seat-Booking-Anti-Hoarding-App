@@ -46,8 +46,12 @@ export default function StudentLogin() {
         { name, roll, code: code.join("") },
       );
       if (res.data.success) {
+        localStorage.setItem(
+          "sessionDetails",
+          JSON.stringify(res.data.details),
+        );
         toast.success(res.data.message);
-        navigate(`/client/session/${computerId}`);
+        navigate(`/computer/success`);
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);

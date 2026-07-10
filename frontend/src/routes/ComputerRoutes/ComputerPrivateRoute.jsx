@@ -16,7 +16,7 @@ const ComputerPrivateRoute = ({ children }) => {
 
   // Session cannot access computer
   if (session.isLoggedIn) {
-    return <Navigate to={`/client/session/${session.computerId}`} replace />;
+    return <Navigate to={`/client/session/${session.session.computerId}`} replace />;
   }
 
   // Admin cannot access computer
