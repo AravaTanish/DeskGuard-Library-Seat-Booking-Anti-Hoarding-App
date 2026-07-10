@@ -12,13 +12,17 @@ export default function StudentLogin() {
   const inputs = useRef([]);
   const { computerId } = useParams();
 
-  const handleChange = (value, index) => {
-    if (!/^\d?$/.test(value)) return;
+  const handleChange = (e, index) => {
+    const value = e.target.value.toUpperCase();
+
+    // Allow only letters and numbers
+    if (!/^[A-Z0-9]?$/.test(value)) return;
 
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
 
+    // Move to next input
     if (value && index < 3) {
       inputs.current[index + 1]?.focus();
     }
@@ -91,7 +95,7 @@ export default function StudentLogin() {
                   inputMode="numeric"
                   maxLength={1}
                   value={digit}
-                  onChange={(e) => handleChange(e.target.value, index)}
+                  onChange={(e) => handleChange(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   className="h-16 w-16 rounded-xl border-2 border-gray-200 text-center text-2xl font-bold outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
                 />
