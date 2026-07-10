@@ -33,6 +33,7 @@ function Login() {
             setLoading(false);
         }
     };
+    
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
             <form
@@ -84,12 +85,13 @@ function Login() {
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
-                        <a
+                        <button
                             href="#"
+                            onClick={() => navigate("/admin/otp")}
                             className="text-blue-600 hover:text-blue-700 hover:underline"
                         >
                             Forgot Password?
-                        </a>
+                        </button>
                     </div>
 
                     <Button

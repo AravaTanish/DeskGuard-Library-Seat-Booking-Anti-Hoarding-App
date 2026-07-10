@@ -3,6 +3,9 @@ import validator from "validator";
 import Admin from "../../models/Admin.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
+import apiInstance from "../../config/Brevo.js";
+import sendEmailOTP from "../../config/Sendotp.js";
+
 import { hashPassword, verifyPassword } from "../../utils/password.js";
 import {
     generateAccessToken,
@@ -163,5 +166,29 @@ export const logout = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
         message: "Admin logged out successfully",
+    });
+});
+
+export const sendOtp = asyncHandler(async (req, res) => {
+    console.log("Otp Api Hit");
+
+    const email = req.body.email;
+    console.log("Email", email)
+
+    if (!email) {
+        return res.status(400).json({
+            message: "please provide email",
+            error: true,
+            success: false,
+        });
+    }
+    
+    const otp = (Math.floor(Math.random() * 9000) + 1000);
+
+    await sendEmailOTP(email, otp );                   
+
+    return res.status(200).json({
+        success: true,
+        message: "OTP sent successfully",
     });
 });
