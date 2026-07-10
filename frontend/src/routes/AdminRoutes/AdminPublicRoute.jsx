@@ -15,7 +15,7 @@ const AdminPublicRoute = ({ children }) => {
   }
 
   if (session.isLoggedIn) {
-    return <Navigate to={`/client/session/${session.computerId}`} replace />;
+    return <Navigate to={`/client/session/${session.session.computerId}`} replace />;
   }
 
   if (computer.isLoggedIn) {

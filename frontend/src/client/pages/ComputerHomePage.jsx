@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import useComputerStore from "../../zustand/ComputerStore.js";
+import useSessionStore from "../../zustand/SessionStore.js";
 import socket from "../../socket/socket.js";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import computerApi from "../../api/computerAxios.js";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function ComputerHomePage() {
+  const navigate = useNavigate();
   const { computer } = useComputerStore();
+  const { setSession, setIsLoggedIn } = useSessionStore();
   const [code, setCode] = useState(computer.sessionCode);
   const [expiresAt, setExpiresAt] = useState(
     new Date(computer.sessionCodeExpiresAt),
@@ -23,10 +29,30 @@ function ComputerHomePage() {
       setExpiresAt(new Date(expiresAt));
     });
 
+    socket.on("session-created", async () => {
+      console.log("session-created received");
+      try {
+        const res = await computerApi.put("/client/session/complete");
+        if (res.data.success) {
+          const session = res.data.session;
+          setSession(session);
+          setIsLoggedIn(true);
+          console.log("session =", session);
+          console.log("computerId =", session.computerId);
+          console.log("url =", `/client/session/${session.computerId}`);
+          navigate(`/client/session/${session.computerId}`);
+          toast.success(res.data.message);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    });
+
     return () => {
       socket.off("session-code-updated");
+      socket.off("session-created");
     };
-  }, []);
+  }, [navigate, setIsLoggedIn, setSession]);
 
   useEffect(() => {
     const interval = setInterval(() => {

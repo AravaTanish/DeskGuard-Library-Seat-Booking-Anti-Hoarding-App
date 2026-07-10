@@ -22,7 +22,7 @@ const SessionPrivateRoute = ({ children }) => {
     return children;
   }
 
-  return <Navigate to="/computer/activate" replace />;
+  return <Navigate to="/computer/home" replace />;
 };
 
 export default SessionPrivateRoute;
