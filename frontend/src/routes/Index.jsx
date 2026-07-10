@@ -1,7 +1,7 @@
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
 } from "react-router-dom";
 
 import App from "../App.jsx";
@@ -23,106 +23,115 @@ import StudentLogin from "../client/pages/StudentLogin.jsx";
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 import ComputerHomePage from "../client/pages/ComputerHomePage.jsx";
 import StudentSuccess from "../client/pages/StudentSuccess.jsx";
+import OtpPage from "../admin/OtpPage.jsx";
 
 import Session from "../client/pages/Session.jsx";
 
 const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      {/* ================= ADMIN ================= */}
+    createRoutesFromElements(
+        <Route path="/" element={<App />}>
+            {/* ================= ADMIN ================= */}
 
-      <Route path="admin">
-        <Route
-          path="login"
-          element={
-            <AdminPublicRoute>
-              <Login />
-            </AdminPublicRoute>
-          }
-        />
+            <Route path="admin">
+                <Route
+                    path="login"
+                    element={
+                        <AdminPublicRoute>
+                            <Login />
+                        </AdminPublicRoute>
+                    }
+                />
+                <Route
+                    path="otp"
+                    element={
+                        <AdminPublicRoute>
+                            <OtpPage />
+                        </AdminPublicRoute>
+                    }
+                />
 
-        <Route
-          path="signin"
-          element={
-            <AdminPublicRoute>
-              <Signin />
-            </AdminPublicRoute>
-          }
-        />
+                <Route
+                    path="signin"
+                    element={
+                        <AdminPublicRoute>
+                            <Signin />
+                        </AdminPublicRoute>
+                    }
+                />
 
-        <Route
-          path="dashboard"
-          element={
-            <AdminPrivateRoute>
-              <Dashboard />
-            </AdminPrivateRoute>
-          }
-        />
+                <Route
+                    path="dashboard"
+                    element={
+                        <AdminPrivateRoute>
+                            <Dashboard />
+                        </AdminPrivateRoute>
+                    }
+                />
 
-        <Route
-          path="computer"
-          element={
-            <AdminPrivateRoute>
-              <Computer />
-            </AdminPrivateRoute>
-          }
-        />
-      </Route>
+                <Route
+                    path="computer"
+                    element={
+                        <AdminPrivateRoute>
+                            <Computer />
+                        </AdminPrivateRoute>
+                    }
+                />
+            </Route>
 
-      {/* ================= COMPUTER ================= */}
+            {/* ================= COMPUTER ================= */}
 
-      <Route path="computer">
-        <Route
-          path="activate"
-          element={
-            <ComputerPublicRoute>
-              <ComputerActivate />
-            </ComputerPublicRoute>
-          }
-        />
+            <Route path="computer">
+                <Route
+                    path="activate"
+                    element={
+                        <ComputerPublicRoute>
+                            <ComputerActivate />
+                        </ComputerPublicRoute>
+                    }
+                />
 
-        <Route
-          path="home"
-          element={
-            <ComputerPrivateRoute>
-              <ComputerHomePage />
-            </ComputerPrivateRoute>
-          }
-        />
+                <Route
+                    path="home"
+                    element={
+                        <ComputerPrivateRoute>
+                            <ComputerHomePage />
+                        </ComputerPrivateRoute>
+                    }
+                />
 
-        <Route
-          path="success"
-          element={
-            <ComputerPublicRoute>
-              <StudentSuccess />
-            </ComputerPublicRoute>
-          }
-        />
+                <Route
+                    path="success"
+                    element={
+                        <ComputerPublicRoute>
+                            <StudentSuccess />
+                        </ComputerPublicRoute>
+                    }
+                />
 
-        <Route
-          path=":computerId/create-session"
-          element={
-            <ComputerPublicRoute>
-              <StudentLogin />
-            </ComputerPublicRoute>
-          }
-        />
-      </Route>
+                <Route
+                    path=":computerId/create-session"
+                    element={
+                        <ComputerPublicRoute>
+                            <StudentLogin />
+                        </ComputerPublicRoute>
+                    }
+                />
+            </Route>
 
-      {/* ================= SESSION ================= */}
+            {/* ================= SESSION ================= */}
 
-      <Route path="client">
-        <Route
-          path="session/:computerId"
-          element={
-            <SessionPrivateRoute>
-              <Session />
-            </SessionPrivateRoute>
-          }
-        />
-      </Route>
-    </Route>,
-  ),
+            <Route path="client">
+                <Route
+                    path="session/:computerId"
+                    element={
+                        <SessionPrivateRoute>
+                            <Session />
+                        </SessionPrivateRoute>
+                    }
+                />
+            </Route>
+        </Route>,
+    ),
 );
 
 export default router;
