@@ -25,7 +25,10 @@ export const createSession = asyncHandler(async (req, res) => {
     throw new AppError("Verification code is required", 400);
   }
 
-  const computer = await Computer.findById(computerId);
+  const computer = await Computer.findById(computerId).populate(
+    "adminId",
+    "email",
+  );
   if (!computer) {
     throw new AppError("Computer does not exist", 404);
   }
@@ -64,6 +67,10 @@ export const createSession = asyncHandler(async (req, res) => {
   };
 
   io.to(computer._id.toString()).emit("session-created");
+  io.to(computer.adminId.email).emit("computer-status-updated", {
+    computerId: computer._id,
+    status: "occupied",
+  });
 
   return res.status(200).json({
     success: true,
@@ -111,7 +118,7 @@ export const completeSession = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    session: { sessionId: session._id, computerId: computer._id },
+    session,
     message: "Session started successfully",
   });
 });
@@ -125,7 +132,7 @@ export const me = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Session details fetched",
-    session: { sessionId: session._id, computerId: session.computerId },
+    session: session,
   });
 });
 

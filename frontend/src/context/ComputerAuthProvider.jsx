@@ -16,6 +16,7 @@ const ComputerAuthProvider = ({ children }) => {
           setComputer(res.data.computer);
           setIsLoggedIn(true);
           const computerId = res.data.computer._id;
+          console.log(res.data.computer);
           // Connect socket
           socket.connect();
           if (socket.connected) {

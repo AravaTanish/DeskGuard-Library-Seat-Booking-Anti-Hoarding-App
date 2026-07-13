@@ -4,7 +4,18 @@ import useAdminStore from "../zustand/AdminStore.js";
 import socket from "../socket/socket.js";
 
 const AdminAuthProvider = ({ children }) => {
-  const { setEmail, setLoading, setIsLoggedIn } = useAdminStore();
+  const { setEmail, setLoading, setIsLoggedIn, updateComputerStatus } =
+    useAdminStore();
+    
+  useEffect(() => {
+    socket.on("computer-status-updated", ({ computerId, status }) => {
+      updateComputerStatus(computerId, status);
+    });
+
+    return () => {
+      socket.off("computer-status-updated");
+    };
+  }, [updateComputerStatus]);
 
   useEffect(() => {
     const fetchAdmin = async () => {
