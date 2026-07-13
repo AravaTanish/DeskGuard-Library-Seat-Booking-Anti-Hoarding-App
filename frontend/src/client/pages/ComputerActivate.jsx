@@ -4,10 +4,11 @@ import api from "../../api/axios.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useComputerStore from "../../zustand/ComputerStore.js";
+import socket from "../../socket/socket.js";
 
 function ComputerActivate() {
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useComputerStore();
+  const { setIsLoggedIn, setComputer } = useComputerStore();
   const [code, setCode] = useState(Array(8).fill(""));
   const inputs = useRef([]);
   const activationCode = `AC-${code.slice(0, 4).join("")}-${code.slice(4).join("")}`;
@@ -40,9 +41,20 @@ function ComputerActivate() {
         code: activationCode,
       });
       if (res.data.success) {
-        toast.success("Computer activated successfully!");
+        const computer = res.data.computer;
+        setComputer(computer);
         setIsLoggedIn(true);
 
+        socket.connect();
+        if (socket.connected) {
+          socket.emit("join-computer", computer._id);
+        } else {
+          socket.once("connect", () => {
+            socket.emit("join-computer", computer._id);
+          });
+        }
+
+        toast.success("Computer activated successfully!");
         navigate("/computer/home");
       }
     } catch (err) {

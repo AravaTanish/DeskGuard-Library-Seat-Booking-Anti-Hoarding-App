@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 const sessionStore = (set) => ({
-  sessionId: null,
+  session: null,
   isLoggedIn: false,
   loading: true,
 
-  setSessionId: (sessionId) =>
+  setSession: (session) =>
     set({
-      sessionId,
+      session,
     }),
 
   setIsLoggedIn: (value) =>

@@ -1,14 +1,15 @@
 import { Button, Card, Label, TextInput } from "flowbite-react";
 import { Link } from "react-router-dom";
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../api/axios.js";
+import api from "../../api/axios.js";
 
 function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const handleSubmit = async () => {
     try {
       const response = await api.post("/admin/auth/sign-in", {
@@ -26,7 +27,7 @@ function Signin() {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
       <Card className="w-full max-w-md rounded-2xl border border-gray-200 shadow-xl p-4">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800">Sign In</h1>

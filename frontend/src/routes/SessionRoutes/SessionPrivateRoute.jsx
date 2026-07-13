@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import LoadingScreen from "../../components/LoadingScreen.jsx";
+import LoadingScreen from "../../admin/components/LoadingScreen.jsx";
 
 import useAdminStore from "../../zustand/AdminStore.js";
 import useSessionStore from "../../zustand/SessionStore.js";
@@ -22,7 +22,7 @@ const SessionPrivateRoute = ({ children }) => {
     return children;
   }
 
-  return <Navigate to="/computer/activate" replace />;
+  return <Navigate to="/computer/home" replace />;
 };
 
 export default SessionPrivateRoute;

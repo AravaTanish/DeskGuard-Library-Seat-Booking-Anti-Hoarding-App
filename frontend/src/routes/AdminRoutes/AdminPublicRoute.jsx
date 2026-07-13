@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import LoadingScreen from "../../components/LoadingScreen.jsx";
+import LoadingScreen from "../../admin/components/LoadingScreen.jsx";
 
 import useAdminStore from "../../zustand/AdminStore.js";
 import useComputerStore from "../../zustand/ComputerStore.js";
@@ -15,7 +15,7 @@ const AdminPublicRoute = ({ children }) => {
   }
 
   if (session.isLoggedIn) {
-    return <Navigate to={`/client/session/${session.computerId}`} replace />;
+    return <Navigate to={`/client/session/${session.session.computerId}`} replace />;
   }
 
   if (computer.isLoggedIn) {

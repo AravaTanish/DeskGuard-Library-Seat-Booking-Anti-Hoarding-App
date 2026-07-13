@@ -3,6 +3,7 @@ import Computer from "../../models/Computer.model.js";
 import Session from "../../models/Session.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
+import { io } from "../../index.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -46,7 +47,6 @@ export const createSession = asyncHandler(async (req, res) => {
     startTime: startTime,
   });
 
-  const accessToken = generateAccessToken(session._id, "session");
   const refreshToken = generateRefreshToken(session._id, "session");
 
   session.refreshToken = refreshToken;
@@ -55,6 +55,43 @@ export const createSession = asyncHandler(async (req, res) => {
   computer.currentSession = session._id;
   computer.status = "occupied";
   await computer.save();
+
+  const details = {
+    name: name,
+    roll: roll,
+    computerName: computer.name,
+    startTime: startTime,
+  };
+
+  io.to(computer._id.toString()).emit("session-created");
+
+  return res.status(200).json({
+    success: true,
+    details,
+    message: "Session created successfully",
+  });
+});
+
+export const completeSession = asyncHandler(async (req, res) => {
+  const computerId = req.user.id;
+  if (!computerId) {
+    throw new AppError("Computer id is required", 404);
+  }
+
+  const computer = await Computer.findById(computerId).populate({
+    path: "currentSession",
+    select: "+refreshToken",
+  });
+  if (!computer || !computer.currentSession) {
+    throw new AppError("Computer or session not found", 404);
+  }
+
+  const session = computer.currentSession;
+  const refreshToken = session.refreshToken;
+  if (!refreshToken) {
+    throw new AppError("Refresh token not found", 404);
+  }
+  const accessToken = generateAccessToken(session._id, "session");
 
   res.cookie("sessionRefreshToken", refreshToken, {
     httpOnly: true,
@@ -74,7 +111,8 @@ export const createSession = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message: "Session created successfully",
+    session: { sessionId: session._id, computerId: computer._id },
+    message: "Session started successfully",
   });
 });
 
@@ -87,7 +125,7 @@ export const me = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Session details fetched",
-    sessionId: session._id,
+    session: { sessionId: session._id, computerId: session.computerId },
   });
 });
 

@@ -5,12 +5,10 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-green-50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">
-            Reset Password
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-800">Reset Password</h1>
           <p className="mt-2 text-sm text-gray-500">
             Create a new password for your account.
           </p>
