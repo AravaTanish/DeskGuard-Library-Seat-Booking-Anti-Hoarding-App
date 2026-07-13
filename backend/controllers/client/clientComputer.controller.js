@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { io } from "../../index.js";
 import Computer from "../../models/Computer.model.js";
 import ActivationCode from "../../models/ActivationCode.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";

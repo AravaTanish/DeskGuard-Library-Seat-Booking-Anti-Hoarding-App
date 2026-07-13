@@ -46,9 +46,13 @@ function ComputerActivate() {
         setIsLoggedIn(true);
 
         socket.connect();
-        socket.once("connect", () => {
+        if (socket.connected) {
           socket.emit("join-computer", computer._id);
-        });
+        } else {
+          socket.once("connect", () => {
+            socket.emit("join-computer", computer._id);
+          });
+        }
 
         toast.success("Computer activated successfully!");
         navigate("/computer/home");

@@ -14,16 +14,16 @@ import ComputerPublicRoute from "./ComputerRoutes/ComputerPublicRoute.jsx";
 
 import SessionPrivateRoute from "./SessionRoutes/SessionPrivateRoute.jsx";
 
-import Login from "../admin/Login.jsx";
-import Signin from "../admin/Signin.jsx";
-import Dashboard from "../admin/Dashboard.jsx";
-import Computer from "../admin/Computer.jsx";
+import Login from "../admin/pages/Login.jsx";
+import Signin from "../admin/pages/Signin.jsx";
+import Dashboard from "../admin/pages/Dashboard.jsx";
+import Computer from "../admin/pages/Computer.jsx";
+import OtpPage from "../admin/pages/OtpPage.jsx";
 
 import StudentLogin from "../client/pages/StudentLogin.jsx";
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 import ComputerHomePage from "../client/pages/ComputerHomePage.jsx";
 import StudentSuccess from "../client/pages/StudentSuccess.jsx";
-import OtpPage from "../admin/OtpPage.jsx";
 
 import Session from "../client/pages/Session.jsx";
 
