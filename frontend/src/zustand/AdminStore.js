@@ -32,6 +32,12 @@ const adminStore = (set) => ({
       isLoggedIn: false,
     });
   },
+  updateComputerStatus: (computerId, status) =>
+    set((state) => ({
+      computerData: state.computerData.map((computer) =>
+        computer._id === computerId ? { ...computer, status } : computer,
+      ),
+    })),
 });
 
 const useAdminStore = create(

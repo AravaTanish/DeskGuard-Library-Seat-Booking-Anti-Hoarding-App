@@ -30,16 +30,12 @@ function ComputerHomePage() {
     });
 
     socket.on("session-created", async () => {
-      console.log("session-created received");
       try {
         const res = await computerApi.put("/client/session/complete");
         if (res.data.success) {
           const session = res.data.session;
           setSession(session);
           setIsLoggedIn(true);
-          console.log("session =", session);
-          console.log("computerId =", session.computerId);
-          console.log("url =", `/client/session/${session.computerId}`);
           navigate(`/client/session/${session.computerId}`);
           toast.success(res.data.message);
         }

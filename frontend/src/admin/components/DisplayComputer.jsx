@@ -7,7 +7,8 @@ import ActivationCode from "./ActivationCode.jsx";
 
 function DisplayComputer() {
   const [showActivationCode, setShowActivationCode] = useState(false);
-  const { computerData, library, setComputerData } = useAdminStore();
+  const { computerData, library, setComputerData } =
+    useAdminStore();
   const [activationCode, setActivationCode] = useState("");
   const handleActivate = async (computerId) => {
     try {
@@ -45,6 +46,7 @@ function DisplayComputer() {
       console.error("Error deleting computer:", err);
     }
   };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5 gap-4">
       {computerData.map((computer) => (
@@ -60,13 +62,21 @@ function DisplayComputer() {
           {/* Icon Box */}
           <div
             className={`w-30 h-20 rounded-xl flex items-center justify-center mb-4 ${
-              computer.isAvailable ? "bg-green-100" : "bg-red-100"
+              computer.status === "free"
+                ? "bg-green-100"
+                : computer.status === "occupied"
+                  ? "bg-red-100"
+                  : "bg-yellow-100"
             }`}
           >
             <Monitor
               size={38}
               className={
-                computer.isAvailable ? "text-green-600" : "text-red-600"
+                computer.status === "free"
+                  ? "text-green-600"
+                  : computer.status === "occupied"
+                    ? "text-red-600"
+                    : "text-yellow-600"
               }
             />
           </div>
