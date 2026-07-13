@@ -1,20 +1,35 @@
 import { useState } from "react";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function OtpPage() {
     const [email, setEmail] = useState("");
     const [showOtp, setShowOtp] = useState(false);
     const [otp, setOtp] = useState("");
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Tanish");
 
         try {
-            const res = await api.post("/admin/auth/send-otp", { email });
+            if (!showOtp) {
+                const res = await api.post("/admin/auth/send-otp", { email });
 
-            if (res.data.success) {
-                console.log(res.data);
-                setShowOtp(true);
+                if (res.data.success) {
+                    setShowOtp(true);
+                }
+            } else {
+                // Verify OTP
+                navigate("/admin/reset-pass");
+                // const res = await api.post("/admin/auth/verify-otp", {
+                //     email,
+                //     otp,
+                // });
+
+                // if (res.data.success) {
+                //     console.log("OTP Verified");
+                //     navigate("/reset-pass");
+                // }
             }
         } catch (err) {
             console.log(err.response?.body);
@@ -60,19 +75,52 @@ export default function OtpPage() {
                     }}
                     className="space-y-6"
                 >
-                    <div>
-                        <label className="mb-2 block text-sm font-semibold text-gray-700">
-                            Email Address
-                        </label>
+                    {!showOtp ? (
+                        <div>
+                            <label className="mb-2 block text-sm font-semibold text-gray-700">
+                                Email Address
+                            </label>
 
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                        />
-                    </div>
+                            <input
+                                type="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <div>
+                                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="pointer-events-none w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                                    OTP
+                                </label>
+
+                                <input
+                                    type="text"
+                                    maxLength={4}
+                                    placeholder="Enter 4-digit OTP"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-center text-xl tracking-[0.5em] outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                />
+                            </div>
+                        </>
+                    )}
 
                     {/* <div>
                         <label className="mb-2 block text-sm font-semibold text-gray-700">
@@ -88,23 +136,6 @@ export default function OtpPage() {
                             className="w-full rounded-xl border border-gray-300 px-4 py-3 text-center text-xl tracking-[0.5em] outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
                         />
                     </div> */}
-
-                    {showOtp && (
-                        <div>
-                            <label className="mb-2 block text-sm font-semibold text-gray-700">
-                                OTP
-                            </label>
-
-                            <input
-                                type="text"
-                                maxLength={4}
-                                placeholder="Enter 4-digit OTP"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-center text-xl tracking-[0.5em] outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                            />
-                        </div>
-                    )}
 
                     <button
                         type="submit"
