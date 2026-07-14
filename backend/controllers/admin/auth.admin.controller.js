@@ -172,7 +172,7 @@ export const sendOtp = asyncHandler(async (req, res) => {
     console.log("Otp Api Hit");
 
     const email = req.body.email;
-    console.log("Email", email)
+    console.log("Email", email);
 
     if (!email) {
         return res.status(400).json({
@@ -181,13 +181,61 @@ export const sendOtp = asyncHandler(async (req, res) => {
             success: false,
         });
     }
-    
-    const otp = (Math.floor(Math.random() * 9000) + 1000);
 
-    await sendEmailOTP(email, otp );                   
+    const otp = Math.floor(Math.random() * 9000) + 1000;
+
+    const admin = await Admin.findOne({ email });
+    admin.otp = otp;
+    await admin.save();
+
+    await sendEmailOTP(email, otp);
 
     return res.status(200).json({
         success: true,
         message: "OTP sent successfully",
+    });
+});
+
+export const verifyotp = asyncHandler(async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (otp.length < 4) {
+        throw new AppError("Enter correct otp", 400);
+    }
+
+    if (!email) {
+        throw new AppError("Enter email", 400);
+    }
+
+    const admin = await Admin.findOne({ email });
+
+    if (admin.otp !== otp) {
+        throw new AppError("Otp is incorrect", 400);
+    }
+
+    return res.status(200).json({
+        success: true,
+        error: false,
+    });
+});
+
+export const resetpassword = asyncHandler(async (req, res) => {
+    console.log("otp hit");
+
+    const { password, email } = req.body;
+    console.log("email", email);
+    console.log("password", password);
+
+    const hashedPassword = await hashPassword(password);
+    console.log("00");
+
+    const admin = await Admin.findOne({ email });
+    console.log("admin", admin);
+    admin.password = hashedPassword;
+    admin.save();
+    console.log("02");
+    return res.status(200).json({
+        success: true,
+        message: "Password changed successfully",
     });
 });
