@@ -40,6 +40,7 @@ const useAdminStore = create(
     storage: createJSONStorage(() => localStorage),
     partialize: (state) => ({
       library: state.library,
+      email: state.email,
     }),
   }),
 );

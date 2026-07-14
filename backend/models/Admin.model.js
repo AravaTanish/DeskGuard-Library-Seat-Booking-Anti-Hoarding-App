@@ -19,6 +19,9 @@ const adminSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
+    otp: {
+      type:String
+    }
   },
   { timestamps: true },
 );

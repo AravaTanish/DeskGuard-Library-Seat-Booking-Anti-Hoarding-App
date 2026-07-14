@@ -176,7 +176,15 @@ export default async function sendEmailOTP(email, otp) {
 
         console.log(`DeskGuard OTP sent to ${email}`);
     } catch (err) {
-        console.error("Email OTP error:", err);
-        throw new AppError("OTP email failed", 500);
+    console.error("===== BREVO ERROR =====");
+    console.error(err);
+
+    if (err.response) {
+        console.error("Status:", err.response.status);
+        console.error("Body:", err.response.body);
+        console.error("Text:", err.response.text);
     }
+
+    throw new AppError("OTP email failed", 500);
+}
 }

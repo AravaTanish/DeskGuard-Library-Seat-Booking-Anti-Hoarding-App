@@ -24,8 +24,6 @@ import StudentLogin from "../client/pages/StudentLogin.jsx";
 import ComputerActivate from "../client/pages/ComputerActivate.jsx";
 import ComputerHomePage from "../client/pages/ComputerHomePage.jsx";
 import StudentSuccess from "../client/pages/StudentSuccess.jsx";
-import OtpPage from "../admin/OtpPage.jsx";
-import ResetPassword from "../admin/ResetPassword.jsx";
 
 import Session from "../client/pages/Session.jsx";
 
@@ -51,15 +49,6 @@ const router = createBrowserRouter(
                         </AdminPublicRoute>
                     }
                 />
-                <Route 
-                path="reset-pass"
-                element={
-                  <AdminPublicRoute>  
-                    <ResetPassword/>
-                  </AdminPublicRoute>
-                }
-                />
-
                 <Route
                     path="signin"
                     element={
