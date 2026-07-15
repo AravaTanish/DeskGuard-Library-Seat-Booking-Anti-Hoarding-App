@@ -43,11 +43,13 @@ export const createSession = asyncHandler(async (req, res) => {
   }
 
   const startTime = new Date();
+  const endTime = new Date(startTime.getTime() + 3 * 60 * 1000);
   const session = await Session.create({
     studentName: name,
     studentRoll: roll,
     computerId: computerId,
     startTime: startTime,
+    endTime: endTime,
   });
 
   const refreshToken = generateRefreshToken(session._id, "session");
@@ -122,6 +124,28 @@ export const completeSession = asyncHandler(async (req, res) => {
     message: "Session started successfully",
   });
 });
+
+export const extendSession = async (req, res) => {
+  const sessionId = req.user.id;
+  if (!sessionId) {
+    throw new AppError("Session id is required", 404);
+  }
+
+  const session = await Session.findById(sessionId);
+  if (!session) {
+    throw new AppError("Session not found", 404);
+  }
+
+  session.endTime = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  session.warningSent = false;
+  await session.save();
+
+  return res.status(200).json({
+    success: true,
+    session,
+    message: "Session extended successfully",
+  });
+};
 
 export const me = asyncHandler(async (req, res) => {
   const id = req.user.id;

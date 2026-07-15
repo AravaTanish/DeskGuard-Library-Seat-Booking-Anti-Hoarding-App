@@ -3,42 +3,80 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { Monitor, Clock3, Coffee, Square } from "lucide-react";
 import Loading from "../../admin/components/LoadingScreen.jsx";
+import SessionExpiryModal from "../components/SessionExpiryModal.jsx";
+import socket from "../../socket/socket.js";
+import { useNavigate } from "react-router-dom";
+import sessionApi from "../../api/sessionAxios.js";
 
 import useComputerStore from "../../zustand/ComputerStore.js";
 import useSessionStore from "../../zustand/SessionStore.js";
+import toast from "react-hot-toast";
 
-const SESSION_DURATION = 4 * 60 * 60; // 4 hours in seconds
-
-function SessionPage() {
+export default function Session() {
   const { computer } = useComputerStore();
-  const { session } = useSessionStore();
+  const { session, setSession } = useSessionStore();
 
-  const [timeLeft, setTimeLeft] = useState(SESSION_DURATION);
+  const navigate = useNavigate();
+
+  const [warningEndTime, setWarningEndTime] = useState(session.endTime);
+  const [showExpiryModal, setShowExpiryModal] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
-    if (!session?.startTime) return;
+    socket.on("session-expiring", ({ endTime }) => {
+      setWarningEndTime(endTime);
+      setShowExpiryModal(true);
+    });
 
-    const startTime = new Date(session.startTime).getTime();
-    const endTime = startTime + SESSION_DURATION * 1000;
+    socket.on("session-expired", () => {
+      setShowExpiryModal(false);
+      setSession(null);
+      navigate("/computer/home");
+    });
+
+    return () => {
+      socket.off("session-expiring");
+      socket.off("session-expired");
+    };
+  }, [navigate, session, setSession]);
+
+  useEffect(() => {
+    if (!session?.endTime) return;
 
     const updateTimer = () => {
+      const endTime = new Date(session.endTime).getTime();
       const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
-
       setTimeLeft(remaining);
     };
-
     updateTimer();
 
     const interval = setInterval(updateTimer, 1000);
-
     return () => clearInterval(interval);
-  }, [session?.startTime]);
+  }, [session?.endTime]);
+
+  const handleExtend = async () => {
+    try {
+      const res = await sessionApi.post("/client/session/extend");
+      if (res.data.success) {
+        const extendedSession = res.data.session;
+        setSession(extendedSession);
+        toast.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (!computer || !session) {
     return <Loading />;
   }
 
-  const percentage = (timeLeft / SESSION_DURATION) * 100;
+  const totalDuration =
+    (new Date(session.endTime).getTime() -
+      new Date(session.startTime).getTime()) /
+    1000;
+
+  const percentage = (timeLeft / totalDuration) * 100;
 
   const hours = String(Math.floor(timeLeft / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, "0");
@@ -127,8 +165,11 @@ function SessionPage() {
           </p>
         </div>
       </div>
+      <SessionExpiryModal
+        open={showExpiryModal}
+        onExtend={handleExtend}
+        endTime={warningEndTime}
+      />
     </div>
   );
 }
-
-export default SessionPage;
