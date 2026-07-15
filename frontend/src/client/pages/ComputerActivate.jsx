@@ -1,6 +1,6 @@
 import { Monitor } from "lucide-react";
 import { useRef, useState } from "react";
-import api from "../../api/axios.js";
+import computerApi from "../../api/computerAxios.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useComputerStore from "../../zustand/ComputerStore.js";
@@ -37,7 +37,7 @@ function ComputerActivate() {
   };
   const handleClick = async () => {
     try {
-      const res = await api.post("/client/computer/verify-activation-code", {
+      const res = await computerApi.post("/client/computer/verify-activation-code", {
         code: activationCode,
       });
       if (res.data.success) {

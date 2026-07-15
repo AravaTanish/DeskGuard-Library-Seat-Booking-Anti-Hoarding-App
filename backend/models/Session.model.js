@@ -31,6 +31,17 @@ const sessionSchema = new mongoose.Schema(
       type: Date,
     },
 
+    warningSent: {
+      type: Boolean,
+      default: false,
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "ended"],
+      default: "active",
+    },
+
     breaksCount: {
       type: Number,
     },

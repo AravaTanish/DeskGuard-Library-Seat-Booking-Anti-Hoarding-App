@@ -16,6 +16,8 @@ import sessionRoutes from "./routes/client/session.routes.js";
 
 import globalErrorMiddleware from "./middlewares/globalError.middleware.js";
 
+import "./cron/sessionExpiryCron.js";
+
 const app = express();
 
 const server = createServer(app);
