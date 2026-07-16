@@ -1,13 +1,24 @@
 import Session from "../models/Session.model.js";
 import { io } from "../index.js";
+import AppError from "./appError.js";
 
 export const expireSession = async (session) => {
-  session.status = "ended";
-  await session.save();
   const computer = session.computerId;
   computer.status = "free";
   computer.currentSession = null;
+  computer.populate("adminId", "email");
   await computer.save();
+
+  await session.deleteOne();
+
+  res.clearCookie("sessionAccessToken");
+  res.clearCookie("sessionRefreshToken");
+
+  io.to(computer.adminId.email).emit("computer-status-updated", {
+    computerId: computer._id,
+    status: "free",
+  });
+
   io.to(computer._id.toString()).emit("session-expired");
 };
 
@@ -38,9 +49,13 @@ export const processExpiringSessions = async () => {
     endTime: {
       $lte: now,
     },
-  }).populate("computerId");
+  }).populate("computerId", "adminId status currentSession");
 
   for (const session of expiredSessions) {
-    await expireSession(session);
+    try {
+      await expireSession(session);
+    } catch (error) {
+      throw new AppError("Failed to end session", 400);
+    }
   }
 };

@@ -4,6 +4,7 @@ import Session from "../../models/Session.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
 import { io } from "../../index.js";
+import { expireSession } from "../../utils/sessionExpiry.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -146,6 +147,25 @@ export const extendSession = async (req, res) => {
     message: "Session extended successfully",
   });
 };
+
+export const endSession = asyncHandler(async (req, res) => {
+  const sessionId = req.user.id;
+  if (!sessionId) {
+    throw new AppError("Invalid sessionId", 400);
+  }
+
+  const session = await Session.findById(sessionId).populate(
+    "computerId",
+    "adminId status currentSession",
+  );
+
+  await expireSession(session);
+
+  return res.status(200).json({
+    success: true,
+    message: "Successfully ended session",
+  });
+});
 
 export const me = asyncHandler(async (req, res) => {
   const id = req.user.id;

@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 export default function Session() {
   const { computer } = useComputerStore();
-  const { session, setSession } = useSessionStore();
+  const { session, setSession, setIsLoggedIn } = useSessionStore();
 
   const navigate = useNavigate();
 
@@ -29,6 +29,7 @@ export default function Session() {
     });
 
     socket.on("session-expired", () => {
+      console.log("Session expired event received");
       setShowExpiryModal(false);
       setSession(null);
       navigate("/computer/home");
@@ -88,6 +89,22 @@ export default function Session() {
       minute: "2-digit",
     })
     .toUpperCase();
+
+  const handleSession = async () => {
+    try {
+      const res = await sessionApi.post("/client/session/end-session");
+      console.log(res.data.message);
+      if (res.data.success) {
+        setIsLoggedIn(false);
+        setSession(null);
+        console.log("Session ended successfully");
+        navigate("/computer/home");
+        console.log("Navigated to /computer/home");
+      }
+    } catch (err) {
+      console.log(err.data.message);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-green-50 flex items-center justify-center p-4">
@@ -152,7 +169,10 @@ export default function Session() {
             Take a Break
           </button>
 
-          <button className="flex items-center justify-center gap-2 rounded-2xl bg-red-500 py-3 text-lg font-semibold text-white transition hover:bg-red-600">
+          <button
+            onClick={handleSession}
+            className="flex items-center justify-center gap-2 rounded-2xl bg-red-500 py-3 text-lg font-semibold text-white transition hover:bg-red-600"
+          >
             <Square className="w-5 h-5" />
             End Session
           </button>
