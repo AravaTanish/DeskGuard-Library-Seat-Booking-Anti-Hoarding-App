@@ -6,6 +6,7 @@ import {
   me,
   completeSession,
   extendSession,
+  endSession,
 } from "../../controllers/client/session.controller.js";
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.put("/complete", authMiddleware("computer"), completeSession);
 router.put("/refresh", refresh);
 router.get("/me", authMiddleware("session"), me);
 router.post("/extend", authMiddleware("session"), extendSession);
+router.post("/end-session", authMiddleware("session"), endSession);
 
 export default router;
