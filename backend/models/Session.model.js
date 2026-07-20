@@ -41,7 +41,9 @@ const sessionSchema = new mongoose.Schema(
       enum: ["active", "ended"],
       default: "active",
     },
-
+    isOnBreak:{
+      type: Boolean
+    },
     breaksCount: {
       type: Number,
     },
