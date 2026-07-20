@@ -7,6 +7,8 @@ import {
   completeSession,
   extendSession,
   endSession,
+  breakSession,
+  endBreak,
 } from "../../controllers/client/session.controller.js";
 
 const router = express.Router();
@@ -17,5 +19,7 @@ router.put("/refresh", refresh);
 router.get("/me", authMiddleware("session"), me);
 router.post("/extend", authMiddleware("session"), extendSession);
 router.post("/end-session", authMiddleware("session"), endSession);
+router.post("/break-session", authMiddleware("session"), breakSession)
+router.post("/end-break", authMiddleware("session"), endBreak);
 
 export default router;
