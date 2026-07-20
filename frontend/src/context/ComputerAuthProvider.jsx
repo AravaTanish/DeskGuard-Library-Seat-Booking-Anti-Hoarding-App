@@ -1,8 +1,11 @@
 import { useEffect } from "react";
-
 import socket from "../socket/socket.js";
 import computerApi from "../api/computerAxios.js";
 import useComputerStore from "../zustand/ComputerStore.js";
+import {
+  requestNotificationPermission,
+  subscribeToPush,
+} from "../utils/push.js";
 
 const ComputerAuthProvider = ({ children }) => {
   const { setComputer, setIsLoggedIn, setLoading } = useComputerStore();
@@ -15,8 +18,11 @@ const ComputerAuthProvider = ({ children }) => {
         if (res.data.success) {
           setComputer(res.data.computer);
           setIsLoggedIn(true);
+
+          const granted = await requestNotificationPermission();
+          if (granted) await subscribeToPush();
+
           const computerId = res.data.computer._id;
-          console.log(res.data.computer);
           // Connect socket
           socket.connect();
           if (socket.connected) {

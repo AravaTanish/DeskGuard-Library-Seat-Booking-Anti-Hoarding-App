@@ -60,7 +60,7 @@ export default function BreakSession() {
         }
 
         return () => clearInterval(interval);
-    }, [session]);
+    }, [BREAK_TIME, session]);
 
     const percentage = (timeLeft / BREAK_TIME) * 100;
 
