@@ -6,7 +6,6 @@ import useAdminStore from "../../zustand/AdminStore.js";
 import { useEffect } from "react";
 import api from "../../api/axios.js";
 import DisplayComputer from "../components/DisplayComputer.jsx";
-import socket from "../../socket/socket.js";
 
 function Computer() {
     const { library, computerData, setComputerData } = useAdminStore();
@@ -23,12 +22,6 @@ function Computer() {
                 }
             };
             fetchComputers();
-            socket.on("computerUpdated", () => {
-                fetchComputers();
-            });
-            return () => {
-                socket.off("computerUpdated");
-            };
         } catch (err) {
             console.error("Error fetching computers:", err);
         }

@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
 import Computer from "../../models/Computer.model.js";
 import ActivationCode from "../../models/ActivationCode.model.js";
+import PushSubscription from "../../models/PushSubscription.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import AppError from "../../utils/appError.js";
 import { generateCode } from "../../utils/code.js";
+import webPush from "../../config/vapid.js";
 
 import {
   generateAccessToken,
@@ -108,5 +110,26 @@ export const refresh = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "New access token generated successfully",
+  });
+});
+
+export const getVapidPublicKey = (req, res) => {
+  res.json({
+    success: true,
+    publicKey: process.env.VAPID_PUBLIC_KEY,
+  });
+};
+
+export const pushSubscription = asyncHandler(async (req, res) => {
+  const computerId = req.user.id;
+
+  await PushSubscription.findOneAndUpdate(
+    { computer: computerId },
+    { subscription: req.body.subscription },
+    { upsert: true, returnDocument: "after" },
+  );
+
+  res.json({
+    success: true,
   });
 });
